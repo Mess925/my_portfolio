@@ -55,99 +55,105 @@ class ContactPage extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.black,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/han.jpg'),
-            fit: BoxFit.cover,
-            alignment: Alignment(-15, 0),
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(40),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isMobile = constraints.maxWidth < 800;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(40),
-                        child: Text(
-                          'CONTACT',
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 800;
+          return Container(
+            width: double.infinity,
+            height: constraints.maxHeight,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/han.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(40),
+                  child: SizedBox(
+                    height: isMobile ? 620 : 600,
+                    child: Column(
+                      children: [
+                        Text(
+                          'CONTACT ME',
                           style: GoogleFonts.abrilFatface(
-                            fontSize: 48,
+                            fontSize: isMobile ? 32 : 48,
                             color: Colors.white,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 40),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(40),
-                          child: Column(
-                            mainAxisSize:
-                                MainAxisSize.min, // keeps column tight
-                            children: [
-                              Icon(Icons.email, size: 80, color: Colors.white),
-                              const SizedBox(height: 30),
-                              Text(
-                                'Let\'s work together!',
-                                style: GoogleFonts.abrilFatface(
-                                  fontSize: 28,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                'Get in touch for opportunities',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white.withOpacity(0.8),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                        const SizedBox(height: 60),
+                        SizedBox(
+                          width: isMobile ? double.infinity : 700,
+                          child: Text(
+                            'Let\'s Work Together',
+                            style: TextStyle(
+                              fontSize: isMobile ? 16 : 18,
+                              color: Colors.white,
+                              height: 1.6,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 80),
-                      Row(
-                        mainAxisAlignment: isMobile
-                            ? MainAxisAlignment.start
-                            : MainAxisAlignment.start,
-                        children: [
-                          _socialButton(FontAwesomeIcons.linkedin),
-                          const SizedBox(width: 12),
-                          _socialButton(FontAwesomeIcons.github),
-                        ],
-                      ),
-                    ],
-                  );
-                },
+                        const SizedBox(height: 60),
+                        SizedBox(
+                          width: isMobile ? double.infinity : 700,
+                          child: Text(
+                            'Get In touch For More Oppotunities!',
+                            style: TextStyle(
+                              fontSize: isMobile ? 16 : 18,
+                              color: Colors.white,
+                              height: 1.6,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 60),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _socialButton(FontAwesomeIcons.linkedin),
+                            const SizedBox(width: 12),
+                            _socialButton(FontAwesomeIcons.github),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _socialButton(FontAwesomeIcons.envelope),
+                            const SizedBox(width: 12),
+                            _socialButton(FontAwesomeIcons.linktree),
+                            const SizedBox(width: 12),
+                            _socialButton(FontAwesomeIcons.phone),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
   Widget _socialButton(IconData icon) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(3),
       ),
       child: IconButton(
         padding: EdgeInsets.zero,
         onPressed: () {},
-        icon: FaIcon(icon, color: Colors.black, size: 28),
+        icon: FaIcon(icon, color: Colors.white.withOpacity(0.9), size: 70),
       ),
     );
   }
