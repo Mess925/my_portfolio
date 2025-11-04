@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'AboutMe.dart';
+import 'Contact.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class ScrollablePages extends StatefulWidget {
-  const ScrollablePages({Key? key}) : super(key: key);
+  const ScrollablePages({super.key});
 
   @override
   State<ScrollablePages> createState() => _ScrollablePagesState();
@@ -40,79 +42,10 @@ class _ScrollablePagesState extends State<ScrollablePages> {
         onPageChanged: (int page) {},
         children: [
           const HomePage(),
-          _buildAboutPage(),
-          _buildProjectsPage(),
-          _buildContactPage(),
+          const AboutMePage(),
+          // const ProjectsPage(),
+          const ContactPage(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAboutPage() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Colors.grey.shade900, Colors.grey.shade800],
-        ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'ABOUT ME',
-                style: GoogleFonts.abrilFatface(
-                  fontSize: 48,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 40),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi, I\'m Han!',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: 32,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'I\'m a passionate mobile app developer with expertise in creating beautiful and functional applications. I specialize in Flutter development and love bringing ideas to life through code.',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white.withOpacity(0.9),
-                          height: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        'Skills',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      _buildSkillChip('Flutter'),
-                      _buildSkillChip('Dart'),
-                      _buildSkillChip('Mobile Development'),
-                      _buildSkillChip('UI/UX Design'),
-                      _buildSkillChip('Firebase'),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -388,99 +321,104 @@ class HomePage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Transform.translate(
+                        offset: const Offset(-12, -64),
+                        child: Text(
+                          'HAN',
+                          style: TextStyle(
+                            fontSize: 128,
+                            fontFamily: 'AbrilFatFace',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Transform.translate(
+                        offset: const Offset(-136, -114),
+                        child: Text(
+                          'I am',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontFamily: 'AbrilFatFace',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Transform.translate(
+                        offset: const Offset(66, -4),
+                        child: Text(
+                          'Mobile App Developer',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontFamily: 'AbrilFatFace',
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Transform.translate(
-                      offset: const Offset(-12, -64),
-                      child: Text(
-                        'HAN',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: 128,
-                          color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {},
+                            icon: const FaIcon(
+                              FontAwesomeIcons.linkedin,
+                              color: Colors.black,
+                              size: 35,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Transform.translate(
-                      offset: const Offset(-136, -114),
-                      child: Text(
-                        'I am',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: 10,
-                          color: Colors.white,
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {},
+                            icon: const FaIcon(
+                              FontAwesomeIcons.github,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Transform.translate(
-                      offset: const Offset(66, -4),
-                      child: Text(
-                        'Mobile App Developer',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: 10,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          icon: const FaIcon(
-                            FontAwesomeIcons.linkedin,
-                            color: Colors.black,
-                            size: 35,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          icon: const FaIcon(
-                            FontAwesomeIcons.github,
-                            color: Colors.black,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
