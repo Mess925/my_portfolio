@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'WelcomePage.dart';
 
 class HomePage extends StatelessWidget {
   final Function(int)? onNavigate;
@@ -32,8 +33,8 @@ class HomePage extends StatelessWidget {
           if (isMobile) {
             return Column(
               children: [
-                _PhotoSection(isMobile: isMobile),
-                _HeroSection(isMobile: isMobile, isTablet: isTablet),
+                PhotoSection(isMobile: isMobile),
+                HeroSection(isMobile: isMobile, isTablet: isTablet),
               ],
             );
           }
@@ -42,10 +43,10 @@ class HomePage extends StatelessWidget {
             children: [
               Expanded(
                 child: Center(
-                  child: _HeroSection(isMobile: isMobile, isTablet: isTablet),
+                  child: HeroSection(isMobile: isMobile, isTablet: isTablet),
                 ),
               ),
-              Expanded(child: _PhotoSection(isMobile: isMobile)),
+              Expanded(child: PhotoSection(isMobile: isMobile)),
             ],
           );
         },
@@ -54,63 +55,10 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HeroSection extends StatelessWidget {
-  final bool isMobile;
-  final bool isTablet;
-
-  const _HeroSection({required this.isMobile, required this.isTablet});
-
-  double _getFontSize(double mobile, double tablet, double desktop) {
-    if (isMobile) return mobile;
-    if (isTablet) return tablet;
-    return desktop;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(right: isMobile ? 150 : 200),
-          child: Text(
-            'I am',
-            style: GoogleFonts.abrilFatface(
-              fontSize: _getFontSize(18, 22, 24),
-              color: Colors.white,
-              letterSpacing: 2,
-              height: 0.1,
-            ),
-          ),
-        ),
-        Text(
-          'HAN',
-          style: GoogleFonts.abrilFatface(
-            fontSize: _getFontSize(94, 110, 128),
-            color: Colors.white,
-            height: 0.9,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          'Mobile App Developer',
-          style: GoogleFonts.abrilFatface(
-            fontSize: _getFontSize(19, 23, 26),
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 40),
-        _SocialButtonsRow(isMobile: isMobile),
-      ],
-    );
-  }
-}
-
-class _SocialButtonsRow extends StatelessWidget {
+class SocialButtonsRow extends StatelessWidget {
   final bool isMobile;
 
-  const _SocialButtonsRow({required this.isMobile});
+  const SocialButtonsRow({required this.isMobile});
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -228,68 +176,5 @@ class _SocialButtonState extends State<_SocialButton> {
     if (icon == FontAwesomeIcons.link) return 'Links';
     if (icon == FontAwesomeIcons.phone) return 'Phone';
     return '';
-  }
-}
-
-class _PhotoSection extends StatelessWidget {
-  final bool isMobile;
-
-  const _PhotoSection({required this.isMobile});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(isMobile ? 40 : 60),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isMobile ? 300 : 700,
-          maxHeight: isMobile ? 300 : 700,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(
-            'assets/images/profile.jpg', // Replace with your image path
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              // Placeholder when image is not found
-              return Container(
-                color: Colors.white.withOpacity(0.1),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        size: isMobile ? 100 : 150,
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Add your photo here',
-                        style: GoogleFonts.abrilFatface(
-                          fontSize: isMobile ? 18 : 24,
-                          color: Colors.white.withOpacity(0.7),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
   }
 }
