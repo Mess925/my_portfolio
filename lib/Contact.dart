@@ -8,6 +8,7 @@ import 'WelcomePage.dart';
 
 class ContactPage extends StatelessWidget {
   final Function(int)? onNavigate;
+  static const String email = 'hanminthant222@gmail.com';
 
   const ContactPage({super.key, this.onNavigate});
 
@@ -45,72 +46,9 @@ class ContactPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'CONTACT',
-          textAlign: TextAlign.start,
-          style: GoogleFonts.abrilFatface(
-            fontSize: getFontSize(55, 60, 70, isMobile, isTablet),
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        _buildTitle(55, isMobile, isTablet),
         const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 20,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: RichText(
-                textAlign: TextAlign.start,
-                text: TextSpan(
-                  style: GoogleFonts.roboto(
-                    fontSize: 16,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Want to Develop a Mobile App?\n\n',
-                      style: GoogleFonts.abrilFatface(
-                        fontSize: 40,
-                        color: Colors.white,
-                      ),
-                    ),
-                    TextSpan(
-                      text:
-                          'I am currently prioritizing projects in social, education and new ideas. Send me an E-mail with your details at ',
-                    ),
-                    TextSpan(
-                      text: 'hanminthant222@gmail.com',
-                      style: GoogleFonts.roboto(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () =>
-                            _launchEmail('hanminthant222@gmail.com'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        _buildContactCard(40, 16, isMobile, isTablet),
         const SizedBox(height: 40),
         SocialButtonsRow(isMobile: isMobile),
       ],
@@ -123,60 +61,20 @@ class ContactPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 80),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'CONTACT',
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.abrilFatface(
-                    fontSize: getFontSize(55, 60, 70, isMobile, isTablet),
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                _buildTitle(
+                  getFontSize(55, 60, 70, isMobile, isTablet),
+                  isMobile,
+                  isTablet,
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Want To Develop a Mobile App?\n\n',
-                            style: TextStyle(color: Colors.white, fontSize: 13),
-                            textAlign: TextAlign.start,
-                          ),
-                          Text(
-                            'I\'m currently prioritizing projects in consumer, education, and new hardware. Shoot me a note with your details at gabe@valdivia.works',
-                            style: TextStyle(color: Colors.white, fontSize: 13),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                _buildContactCard(30, 20, isMobile, isTablet),
               ],
             ),
           ),
@@ -185,6 +83,93 @@ class ContactPage extends StatelessWidget {
           child: Center(child: SocialButtonsRow(isMobile: isMobile)),
         ),
       ],
+    );
+  }
+
+  Widget _buildTitle(double fontSize, bool isMobile, bool isTablet) {
+    return Text(
+      'CONTACT',
+      textAlign: TextAlign.start,
+      style: GoogleFonts.abrilFatface(
+        fontSize: fontSize,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget _buildContactCard(
+    double titleSize,
+    double bodySize,
+    bool isMobile,
+    bool isTablet,
+  ) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 30 : 20,
+        vertical: 40,
+      ),
+      decoration: _cardDecoration(),
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: _buildContactText(titleSize, bodySize),
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: Colors.white.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.3),
+          blurRadius: 20,
+          spreadRadius: 5,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContactText(double titleSize, double bodySize) {
+    return RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        style: GoogleFonts.roboto(
+          fontSize: bodySize,
+          color: Colors.white,
+          letterSpacing: 0.5,
+        ),
+        children: [
+          TextSpan(
+            text: 'Want to Develop a Mobile App?\n\n',
+            style: GoogleFonts.abrilFatface(
+              fontSize: titleSize,
+              color: Colors.white,
+            ),
+          ),
+          const TextSpan(
+            text:
+                '''I am currently prioritizing projects in social, education and new 
+ideas. Send me an E-mail with your details at ''',
+          ),
+          TextSpan(
+            text: email,
+            style: GoogleFonts.roboto(
+              fontSize: bodySize,
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => _launchEmail(email),
+          ),
+        ],
+      ),
     );
   }
 
@@ -202,3 +187,13 @@ class ContactPage extends StatelessWidget {
     }
   }
 }
+
+
+
+// Text(
+//                   link.label,
+//                   style: GoogleFonts.roboto(
+//                     fontSize: isMobile ? 14 : 16,
+//                     color: Colors.white.withOpacity(0.85),
+//                   ),
+//                 ),

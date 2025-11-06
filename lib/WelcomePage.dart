@@ -123,7 +123,7 @@ class PhotoSection extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Image.asset(
-            'assets/images/THA.JPG',
+            'assets/images/a.JPG',
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
@@ -314,39 +314,89 @@ class SocialButtonsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final socialLinks = [
-      SocialLink(
-        icon: FontAwesomeIcons.linkedin,
-        url: 'https://www.linkedin.com/in/han-min-thant-0b051a283/',
-      ),
-      SocialLink(
-        icon: FontAwesomeIcons.github,
-        url: 'https://github.com/Mess925',
-      ),
-      SocialLink(
-        icon: FontAwesomeIcons.envelope,
-        url: 'mailto:your-email@example.com',
-      ),
-      SocialLink(
-        icon: FontAwesomeIcons.link,
-        url: 'https://linktr.ee/yourprofile',
-      ),
-      SocialLink(icon: FontAwesomeIcons.phone, url: 'tel:+1234567890'),
-    ];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildRow('Personal', [
+          SocialLink(
+            icon: FontAwesomeIcons.instagram,
+            url: 'https://www.instagram.com/yourprofile',
+            label: 'LinkedIn',
+          ),
+          SocialLink(
+            icon: FontAwesomeIcons.phone,
+            url: 'tel:+1234567890',
+            label: 'Phone',
+          ),
+          SocialLink(
+            icon: FontAwesomeIcons.github,
+            url: 'https://github.com/Mess925',
+            label: 'GitHub',
+          ),
+        ]),
+        SizedBox(height: isMobile ? 24 : 32),
+        _buildRow('Professional', [
+          SocialLink(
+            icon: FontAwesomeIcons.link,
+            url: 'https://linktr.ee/yourprofile',
+            label: 'LinkTree',
+          ),
+          SocialLink(
+            icon: FontAwesomeIcons.envelope,
+            url: 'mailto:hanminthant222@gmail.com',
+            label: 'E-Mail',
+          ),
+          SocialLink(
+            icon: FontAwesomeIcons.linkedin,
+            url: 'https://www.linkedin.com/in/han-min-thant-0b051a283/',
+            label: 'LinkedIn',
+          ),
+        ]),
+      ],
+    );
+  }
 
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      alignment: WrapAlignment.center,
-      children: socialLinks
-          .map(
-            (link) => _SocialButton(
-              icon: link.icon,
-              isMobile: isMobile,
-              onTap: () => _launchURL(link.url),
+  Widget _buildRow(String header, List<SocialLink> links) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: isMobile ? 120 : 150,
+          child: Text(
+            header,
+            style: GoogleFonts.abrilFatface(
+              fontSize: isMobile ? 18 : 22,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
-          )
-          .toList(),
+          ),
+        ),
+        SizedBox(width: isMobile ? 16 : 24),
+        ...links.map(
+          (link) => Padding(
+            padding: EdgeInsets.only(right: isMobile ? 12 : 16),
+            child: Row(
+              children: [
+                _SocialButton(
+                  icon: link.icon,
+                  isMobile: isMobile,
+                  onTap: () => _launchURL(link.url),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  link.label,
+                  style: GoogleFonts.roboto(
+                    fontSize: isMobile ? 14 : 16,
+                    color: Colors.white.withOpacity(0.85),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -354,8 +404,9 @@ class SocialButtonsRow extends StatelessWidget {
 class SocialLink {
   final IconData icon;
   final String url;
+  final String label;
 
-  SocialLink({required this.icon, required this.url});
+  SocialLink({required this.icon, required this.url, required this.label});
 }
 
 class _SocialButton extends StatefulWidget {
@@ -379,7 +430,7 @@ class _SocialButtonState extends State<_SocialButton> {
   @override
   Widget build(BuildContext context) {
     final double buttonSize = widget.isMobile ? 40 : 50;
-    final double iconSize = widget.isMobile ? 24 : 28;
+    final double iconSize = widget.isMobile ? 20 : 24;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -408,18 +459,21 @@ class _SocialButtonState extends State<_SocialButton> {
             color: _isHovered ? Colors.white : Colors.grey.withOpacity(0.85),
             size: iconSize,
           ),
-          tooltip: _getTooltip(widget.icon),
+          tooltip: widget.icon == FontAwesomeIcons.linkedin
+              ? 'LinkedIn'
+              : widget.icon == FontAwesomeIcons.github
+              ? 'GitHub'
+              : widget.icon == FontAwesomeIcons.envelope
+              ? 'Email'
+              : widget.icon == FontAwesomeIcons.link
+              ? 'Linktree'
+              : widget.icon == FontAwesomeIcons.phone
+              ? 'Phone'
+              : widget.icon == FontAwesomeIcons.instagram
+              ? 'Instagram'
+              : '',
         ),
       ),
     );
-  }
-
-  String _getTooltip(IconData icon) {
-    if (icon == FontAwesomeIcons.linkedin) return 'LinkedIn';
-    if (icon == FontAwesomeIcons.github) return 'GitHub';
-    if (icon == FontAwesomeIcons.envelope) return 'Email';
-    if (icon == FontAwesomeIcons.link) return 'Links';
-    if (icon == FontAwesomeIcons.phone) return 'Phone';
-    return '';
   }
 }
