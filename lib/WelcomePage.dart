@@ -52,6 +52,8 @@ class _ScrollablePagesState extends State<ScrollablePages> {
       body: PageView(
         controller: _controller,
         scrollDirection: Axis.vertical,
+        physics:
+            const NeverScrollableScrollPhysics(), // Disable PageView scrolling
         children: [const HomePage(), const ProjectPage(), const ContactPage()],
       ),
     );
