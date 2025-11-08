@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'WelcomePage.dart';
 import 'Metorshower.dart';
 
@@ -14,31 +15,48 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 1) {
-      // User scrolled to bottom, navigate to next page
-      if (widget.onNavigate != null) {
-        widget.onNavigate!(1); // Navigate to page 1 (Projects)
+  bool _handleScrollNotification(ScrollNotification notification) {
+    // When user tries to scroll but can't because they're at the edge
+    if (notification is OverscrollNotification) {
+      // overscroll > 0 means trying to scroll down past bottom
+      if (notification.overscroll > 0) {
+        if (widget.onNavigate != null) {
+          widget.onNavigate!(1);
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void _handlePointerSignal(PointerSignalEvent event) {
+    if (event is PointerScrollEvent) {
+      // Check if at bottom and trying to scroll down
+      if (_scrollController.hasClients) {
+        final isAtBottom =
+            _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent;
+
+        if (isAtBottom && event.scrollDelta.dy > 0) {
+          if (widget.onNavigate != null) {
+            widget.onNavigate!(1);
+          }
+        }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return Listener(
+      onPointerSignal: _handlePointerSignal,
+      child: _buildBody(context),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
@@ -49,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             constraints.maxWidth >= 800 && constraints.maxWidth < 1200;
 
         if (isMobile) {
-          // Mobile layout with separated scrollable and non-scrollable sections
+          // Mobile layout with overscroll detection
           return MeteorShower(
             numberOfMeteors: 20,
             duration: const Duration(seconds: 10),
@@ -66,17 +84,20 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Column(
                 children: [
-                  // Non-scrollable photo section (swipes will navigate pages)
+                  // Non-scrollable photo section
                   PhotoSection(isMobile: isMobile),
 
-                  // Scrollable hero section with auto-navigation at bottom
+                  // Scrollable hero section with overscroll detection
                   Expanded(
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      physics: const ClampingScrollPhysics(),
-                      child: HeroSection(
-                        isMobile: isMobile,
-                        isTablet: isTablet,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: _handleScrollNotification,
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        physics: const BouncingScrollPhysics(),
+                        child: HeroSection(
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        ),
                       ),
                     ),
                   ),
@@ -85,36 +106,40 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else {
-          // Desktop/Tablet layout - fully scrollable with auto-navigation
-          return SingleChildScrollView(
-            controller: _scrollController,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: MeteorShower(
-                numberOfMeteors: 20,
-                duration: const Duration(seconds: 10),
-                meteorColor: Colors.red.withOpacity(0.6),
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.black, Colors.black],
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: HeroSection(
-                          isMobile: isMobile,
-                          isTablet: isTablet,
-                        ),
+          // Desktop/Tablet layout
+          return NotificationListener<ScrollNotification>(
+            onNotification: _handleScrollNotification,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: MeteorShower(
+                  numberOfMeteors: 20,
+                  duration: const Duration(seconds: 10),
+                  meteorColor: Colors.red.withOpacity(0.6),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.black, Colors.black],
                       ),
-                      Expanded(child: PhotoSection(isMobile: isMobile)),
-                    ],
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: HeroSection(
+                            isMobile: isMobile,
+                            isTablet: isTablet,
+                          ),
+                        ),
+                        Expanded(child: PhotoSection(isMobile: isMobile)),
+                      ],
+                    ),
                   ),
                 ),
               ),
