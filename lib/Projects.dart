@@ -14,7 +14,6 @@ class ProjectPage extends StatelessWidget {
           final isMobile = constraints.maxWidth < 800;
           final isTablet =
               constraints.maxWidth >= 800 && constraints.maxWidth < 1200;
-          final isDesktop = constraints.maxWidth >= 1200;
 
           // Responsive padding
           final horizontalPadding = isMobile ? 16.0 : (isTablet ? 40.0 : 80.0);
