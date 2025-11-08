@@ -51,7 +51,7 @@ class ProjectPage extends StatelessWidget {
                                 title: 'ProtectivePath',
                                 subtitle:
                                     'Navigation App For Visually Impaired',
-                                imagePath: 'images/ppth.jpg',
+                                imagePath: 'assets/images/ppth.png',
                                 route: '/protective-path',
                                 isTablet: isTablet,
                               ),
@@ -59,7 +59,7 @@ class ProjectPage extends StatelessWidget {
                               ProjectCard(
                                 title: 'Little Lemon',
                                 subtitle: 'Restaurant Reservation App',
-                                imagePath: 'images/res.jpg',
+                                imagePath: 'assets/images/res.png',
                                 route: '/little-lemon',
                                 isTablet: isTablet,
                               ),
@@ -67,7 +67,7 @@ class ProjectPage extends StatelessWidget {
                               ProjectCard(
                                 title: 'MiniRT',
                                 subtitle: 'Ray Tracing with C',
-                                imagePath: 'images/minirt.jpg',
+                                imagePath: 'assets/images/minirt.png',
                                 route: '/minirt',
                                 isTablet: isTablet,
                               ),
@@ -75,7 +75,7 @@ class ProjectPage extends StatelessWidget {
                               ProjectCard(
                                 title: 'RUN',
                                 subtitle: 'Fitness Running App',
-                                imagePath: 'images/r.jpg',
+                                imagePath: 'assets/images/r.png',
                                 route: '/run',
                                 isTablet: isTablet,
                               ),
@@ -83,7 +83,7 @@ class ProjectPage extends StatelessWidget {
                               ProjectCard(
                                 title: 'Webserv',
                                 subtitle: 'A WebServer',
-                                imagePath: 'images/project5.jpg',
+                                imagePath: 'assets/images/project5.png',
                                 route: '/webserv',
                                 isTablet: isTablet,
                               ),
