@@ -99,7 +99,7 @@ class _ContactPageState extends State<ContactPage>
           Flexible(
             flex: 1,
             child: Padding(
-              padding: EdgeInsets.only(left: isTablet ? 20 : 40),
+              padding: EdgeInsets.only(left: 80),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ProjectDetailPage.dart';
+import 'dart:ui';
 
 class ProjectPage extends StatelessWidget {
   const ProjectPage({Key? key}) : super(key: key);
@@ -8,63 +9,69 @@ class ProjectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.all(40.0),
-        child: Row(
-          children: [
-            const SizedBox(width: 20),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 80,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  ProjectCard(
-                    title: 'ProtectivePath',
-                    subtitle: 'Navigation App For Visually Impaired',
-                    imagePath: 'images/protectivePath.png',
-                    route: '/protective-path',
-                  ),
-                  SizedBox(width: 30),
-                  ProjectCard(
-                    title: 'Little Lemon',
-                    subtitle: 'Restaurant Reservation App',
-                    imagePath: 'images/little_lemon.png',
-                    route: '/little-lemon',
-                  ),
-                  SizedBox(width: 30),
-                  ProjectCard(
-                    title: 'MiniRT',
-                    subtitle: 'Ray Tracing with C',
-                    imagePath: 'images/minirt.png',
-                    route: '/minirt',
-                  ),
-                  SizedBox(width: 30),
-                  ProjectCard(
-                    title: 'Project 4',
-                    subtitle: 'Test Project Number Four',
-                    imagePath: 'images/project4.png',
-                    route: '/project-4',
-                  ),
-                  SizedBox(width: 30),
-                  ProjectCard(
-                    title: 'Project 5',
-                    subtitle: 'Test Project Number Five',
-                    imagePath: 'images/project5.png',
-                    route: '/project-5',
-                  ),
-                  SizedBox(width: 30),
-                  ProjectCard(
-                    title: 'Project 6',
-                    subtitle: 'Test Project Number Six',
-                    imagePath: 'images/project6.png',
-                    route: '/project-6',
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 80.0),
+        child: ScrollConfiguration(
+          // Add a custom scroll behavior that
+          // allows all devices to drag the list.
+          behavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {...PointerDeviceKind.values},
+          ),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height - 120,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          ProjectCard(
+                            title: 'ProtectivePath',
+                            subtitle: 'Navigation App For Visually Impaired',
+                            imagePath: 'images/ppth.png',
+                            route: '/protective-path',
+                          ),
+                          SizedBox(width: 30),
+                          ProjectCard(
+                            title: 'Little Lemon',
+                            subtitle: 'Restaurant Reservation App',
+                            imagePath: 'images/res.png',
+                            route: '/little-lemon',
+                          ),
+                          SizedBox(width: 30),
+                          ProjectCard(
+                            title: 'MiniRT',
+                            subtitle: 'Ray Tracing with C',
+                            imagePath: 'images/minirt.png',
+                            route: '/minirt',
+                          ),
+                          SizedBox(width: 30),
+                          ProjectCard(
+                            title: 'RUN',
+                            subtitle: 'Fitness Running App',
+                            imagePath: 'images/r.png',
+                            route: '/run',
+                          ),
+                          SizedBox(width: 30),
+                          ProjectCard(
+                            title: 'Webserv',
+                            subtitle: 'A WebServer',
+                            imagePath: 'images/project5.png',
+                            route: '/webserv',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 20),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -165,9 +172,15 @@ class _ProjectCardState extends State<ProjectCard> {
               boxShadow: isHovered
                   ? [
                       BoxShadow(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withOpacity(0.4),
                         blurRadius: 40,
                         offset: const Offset(0, 20),
+                      ),
+
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.4),
+                        blurRadius: 40,
+                        offset: const Offset(0, -20),
                       ),
                     ]
                   : [],
@@ -183,35 +196,38 @@ class _ProjectCardState extends State<ProjectCard> {
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
-                    child: Image.asset(
-                      widget.imagePath,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: const Color(0xFF404040),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.broken_image,
-                                  size: 60,
-                                  color: Colors.white.withOpacity(0.3),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  'Image not found',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
-                                    fontSize: 12,
+                    child: Center(
+                      child: Image.asset(
+                        widget.imagePath,
+                        fit: BoxFit.cover,
+                        // height: d,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: const Color(0xFF404040),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.broken_image,
+                                    size: 60,
+                                    color: Colors.white.withOpacity(0.3),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'On Going Project',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

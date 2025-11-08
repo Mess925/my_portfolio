@@ -212,6 +212,7 @@ class HeroSection extends StatelessWidget {
                 color: Colors.white,
                 height: 0.9,
                 fontWeight: FontWeight.bold,
+                letterSpacing: 2,
               ),
             ),
             Text(
