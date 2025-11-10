@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
-// Model class for project details
 class ProjectDetails {
   final String overview;
   final List<String> keyFeatures;
