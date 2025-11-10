@@ -224,7 +224,7 @@ class HeroSection extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             Text(
-              '''A recent graduate from Coventry University with a Bachelor\'s degree, I\'m passionate about mobile application development and currently honing my skills in iOS development. Eager to leverage my knowledge and contribute to a dynamic team, I\'m actively seeking opportunities to embark on a rewarding career in this exciting field.''',
+              '''I’m a recent Computer Science graduate with First Class Honours from Coventry University. Currently honing my coding skills at 42 Singapore, I’m passionate about mobile app development. I have experience with Swift and am now focusing on Flutter for cross-platform applications, as well as Python for backend development.''',
               style: GoogleFonts.abrilFatface(
                 fontSize: getFontSize(18, 22, 24, isMobile, isTablet),
                 color: Colors.white,
