@@ -83,7 +83,8 @@ class ProjectPage extends StatelessWidget {
                               ProjectCard(
                                 title: 'Webserv',
                                 subtitle: 'A WebServer',
-                                imagePath: 'assets/images/project5.png',
+                                imagePath:
+                                    'assets/images/webserv.png', // Updated image name
                                 route: '/webserv',
                                 isTablet: isTablet,
                               ),
@@ -183,6 +184,7 @@ class _ProjectCardState extends State<ProjectCard> {
               builder: (context) => ProjectDetailPage(
                 title: widget.title,
                 subtitle: widget.subtitle,
+                details: getProjectDetails(widget.title),
               ),
             ),
           );

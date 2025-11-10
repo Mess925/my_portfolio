@@ -4,14 +4,33 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
+// Model class for project details
+class ProjectDetails {
+  final String overview;
+  final List<String> keyFeatures;
+  final String technologies;
+  final String? ctaButtonText;
+  final VoidCallback? onCtaPressed;
+
+  const ProjectDetails({
+    required this.overview,
+    required this.keyFeatures,
+    required this.technologies,
+    this.ctaButtonText,
+    this.onCtaPressed,
+  });
+}
+
 class ProjectDetailPage extends StatefulWidget {
   final String title;
   final String subtitle;
+  final ProjectDetails details;
 
   const ProjectDetailPage({
     Key? key,
     required this.title,
     required this.subtitle,
+    required this.details,
   }) : super(key: key);
 
   @override
@@ -150,74 +169,73 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
 
                       const SizedBox(height: 60),
 
-                      // Project Details Section
-                      _buildSection(
-                        'Overview',
-                        'This project showcases innovative solutions and creative design approaches. '
-                            'Built with attention to detail and user experience in mind.',
-                      ),
+                      // Overview Section
+                      _buildSection('Overview', widget.details.overview),
 
                       const SizedBox(height: 40),
 
-                      _buildSection(
+                      // Key Features Section
+                      _buildFeaturesSection(
                         'Key Features',
-                        '• Modern and responsive design\n'
-                            '• Smooth animations and transitions\n'
-                            '• Optimized performance\n'
-                            '• Clean and maintainable code',
+                        widget.details.keyFeatures,
                       ),
 
                       const SizedBox(height: 40),
 
+                      // Technologies Section
                       _buildSection(
                         'Technologies',
-                        'Flutter • Dart • Material Design • Google Fonts',
+                        widget.details.technologies,
                       ),
 
                       const SizedBox(height: 60),
 
-                      // Call to Action Button
-                      Center(
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Add your action here
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Learn more about ${widget.title}',
-                                    ),
-                                    backgroundColor: Colors.grey.shade800,
+                      // Call to Action Button (optional)
+                      if (widget.details.ctaButtonText != null)
+                        Center(
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              child: ElevatedButton(
+                                onPressed:
+                                    widget.details.onCtaPressed ??
+                                    () {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Learn more about ${widget.title}',
+                                          ),
+                                          backgroundColor: Colors.grey.shade800,
+                                        ),
+                                      );
+                                    },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 48,
+                                    vertical: 20,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 48,
-                                  vertical: 20,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  elevation: 0,
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                'Learn More',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 1,
+                                child: Text(
+                                  widget.details.ctaButtonText!,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -254,5 +272,159 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
         ),
       ],
     );
+  }
+
+  Widget _buildFeaturesSection(String title, List<String> features) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 16),
+        ...features.map(
+          (feature) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '• ',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.grey.shade300,
+                    height: 1.8,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    feature,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey.shade300,
+                      height: 1.8,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Helper function to get project details by title
+ProjectDetails getProjectDetails(String title) {
+  switch (title) {
+    case 'ProtectivePath':
+      return const ProjectDetails(
+        overview:
+            'ProtectivePath is an innovative navigation application designed specifically '
+            'for visually impaired users. Using advanced haptic feedback and audio cues, '
+            'it provides safe and intuitive navigation through urban environments.',
+        keyFeatures: [
+          'Real-time obstacle detection using device sensors',
+          'Voice-guided turn-by-turn navigation',
+          'Haptic feedback for directional guidance',
+          'Accessible UI designed for screen readers',
+          'Offline maps for uninterrupted navigation',
+        ],
+        technologies:
+            'Flutter • Google Maps API • TensorFlow Lite • Text-to-Speech',
+        ctaButtonText: 'View Project',
+      );
+
+    case 'Little Lemon':
+      return const ProjectDetails(
+        overview:
+            'Little Lemon is a sophisticated restaurant reservation system '
+            'that streamlines the dining experience. Customers can browse menus, '
+            'make reservations, and receive real-time updates on table availability.',
+        keyFeatures: [
+          'Interactive menu browsing with dietary filters',
+          'Real-time table availability tracking',
+          'Push notifications for reservation confirmations',
+          'Integrated payment system for deposits',
+          'Review and rating system',
+        ],
+        technologies: 'Flutter • Firebase • Cloud Functions • Stripe API',
+        ctaButtonText: 'View Demo',
+      );
+
+    case 'MiniRT':
+      return const ProjectDetails(
+        overview:
+            'MiniRT is a ray tracing engine built from scratch in C, demonstrating '
+            'advanced computer graphics techniques. It renders photorealistic 3D scenes '
+            'with accurate lighting, shadows, and reflections.',
+        keyFeatures: [
+          'Phong reflection model implementation',
+          'Support for multiple light sources',
+          'Sphere, plane, and cylinder primitives',
+          'Ambient, diffuse, and specular lighting',
+          'Shadow casting and reflection',
+        ],
+        technologies: 'C • MinilibX • Linear Algebra • Computer Graphics',
+        ctaButtonText: 'View on GitHub',
+      );
+
+    case 'RUN':
+      return const ProjectDetails(
+        overview:
+            'RUN is a comprehensive fitness tracking application focused on running '
+            'and jogging activities. It tracks your routes, monitors performance metrics, '
+            'and helps you achieve your fitness goals.',
+        keyFeatures: [
+          'GPS-based route tracking and mapping',
+          'Real-time pace and distance calculations',
+          'Performance analytics and progress tracking',
+          'Social features to share runs with friends',
+          'Custom workout plans and challenges',
+        ],
+        technologies: 'Flutter • Google Maps API • SQLite • Health Connect',
+        ctaButtonText: 'Download App',
+      );
+
+    case 'Webserv':
+      return const ProjectDetails(
+        overview:
+            'Webserv is a custom HTTP web server implementation written in C++. '
+            'Following the HTTP/1.1 protocol, it handles multiple concurrent connections '
+            'and serves static and dynamic content efficiently.',
+        keyFeatures: [
+          'HTTP/1.1 protocol implementation',
+          'Multi-client connection handling with select()',
+          'CGI script execution support',
+          'Virtual host configuration',
+          'Custom error pages and redirects',
+        ],
+        technologies: 'C++ • Socket Programming • HTTP Protocol • CGI',
+        ctaButtonText: 'View Documentation',
+      );
+
+    default:
+      return const ProjectDetails(
+        overview:
+            'This project showcases innovative solutions and creative design approaches. '
+            'Built with attention to detail and user experience in mind.',
+        keyFeatures: [
+          'Modern and responsive design',
+          'Smooth animations and transitions',
+          'Optimized performance',
+          'Clean and maintainable code',
+        ],
+        technologies: 'Flutter • Dart • Material Design',
+        ctaButtonText: 'Learn More',
+      );
   }
 }
