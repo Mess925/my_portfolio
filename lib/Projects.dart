@@ -169,7 +169,6 @@ class _ProjectCardState extends State<ProjectCard> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
 
-    // Responsive card dimensions
     final cardWidth = isMobile ? 280.0 : (widget.isTablet ? 300.0 : 350.0);
     final cardHeight = isMobile ? 380.0 : (widget.isTablet ? 450.0 : 500.0);
 
