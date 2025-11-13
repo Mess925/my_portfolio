@@ -37,7 +37,7 @@ class ProjectsSection extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Text(
-                'Featured Projects',
+                'Projects',
                 style: GoogleFonts.abrilFatface(
                   fontSize: Responsive.fontSize(
                     context,
