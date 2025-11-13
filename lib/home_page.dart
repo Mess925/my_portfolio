@@ -133,12 +133,12 @@ class _HomePageState extends State<HomePage> {
           if (!isMobile) ...[
             _NavButton(
               label: 'PROJECTS',
-              isActive: _currentPage == 1,
+              isActive: _currentPage == 0,
               onPressed: () => _navigateToPage(1),
             ),
             _NavButton(
               label: 'ABOUT',
-              isActive: _currentPage == 0,
+              isActive: _currentPage == 1,
               onPressed: () => _navigateToPage(0),
             ),
             _NavButton(

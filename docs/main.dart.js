@@ -66654,7 +66654,7 @@ if(A.bb(a,o,n).w.a.a>=1200)l.push(p.TK())
 return A.aji(o,o,A.wP(B.cH,l,B.dM),!1)},
 Tv(a){var s,r=this,q=null,p="PROJECTS",o=A.bb(a,q,t.w).w.a.a<800,n=o?70:80,m=o?20:40,l=A.a2(B.c.a2(178.5),B.j.n()>>>16&255,B.j.n()>>>8&255,B.j.n()&255),k=A.a2(B.c.a2(25.5),B.e.n()>>>16&255,B.e.n()>>>8&255,B.e.n()&255),j=t.p,i=A.c([A.bT("HAN",q,q,A.nO().$3$color$fontSize$letterSpacing(B.e,o?24:28,3),q),B.Jv],j)
 if(!o){s=r.e
-B.b.K(i,A.c([new A.ny(p,s===1,new A.a7n(r),q),new A.ny("ABOUT",s===0,new A.a7o(r),q),new A.ny("CONTACT",s===2,new A.a7p(r),q)],j))}if(o){j=r.e
+B.b.K(i,A.c([new A.ny(p,s===0,new A.a7n(r),q),new A.ny("ABOUT",s===1,new A.a7o(r),q),new A.ny("CONTACT",s===2,new A.a7p(r),q)],j))}if(o){j=r.e
 if(j===0)j=p
 else j=j===1?"ABOUT":"CONTACT"
 i.push(A.bT(j,q,q,A.cV().$4$color$fontSize$fontWeight$letterSpacing(B.ao,14,B.aK,2),q))}return A.dQ(q,A.dI(i,B.E,B.x,B.A),B.u,q,q,new A.bI(l,q,new A.cK(B.r,B.r,new A.bZ(k,1,B.V,-1),B.r),q,q,q,B.R),q,n,q,new A.av(m,0,m,0),q,q,q)},
