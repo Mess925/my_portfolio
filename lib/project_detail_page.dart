@@ -514,3 +514,5 @@ ProjectDetails getProjectDetails(String title) {
       );
   }
 }
+
+// make it look better

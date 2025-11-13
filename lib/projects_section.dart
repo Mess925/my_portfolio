@@ -10,119 +10,146 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = Responsive.isMobile(context);
-        final isTablet = Responsive.isTablet(context);
+    final isMobile = Responsive.isMobile(context);
+    final isTablet = Responsive.isTablet(context);
 
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: Responsive.verticalPadding(context),
-            horizontal: Responsive.horizontalPadding(context),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: Responsive.verticalPadding(context),
+        horizontal: Responsive.horizontalPadding(context),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            mainAxisAlignment: isMobile
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
             children: [
-              // Header
-              Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.primaryGradient,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    'Featured Projects',
-                    style: GoogleFonts.abrilFatface(
-                      fontSize: Responsive.fontSize(
-                        context,
-                        mobile: 28,
-                        tablet: 32,
-                        desktop: 36,
-                      ),
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              Container(
+                width: 4,
+                height: 32,
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-              const SizedBox(height: 40),
-
-              // Projects List
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: const MaterialScrollBehavior().copyWith(
-                    dragDevices: {...PointerDeviceKind.values},
+              const SizedBox(width: 16),
+              Text(
+                'Featured Projects',
+                style: GoogleFonts.abrilFatface(
+                  fontSize: Responsive.fontSize(
+                    context,
+                    mobile: 28,
+                    tablet: 32,
+                    desktop: 36,
                   ),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      Row(
-                        children: [
-                          ProjectCard(
-                            title: 'ProtectivePath',
-                            subtitle: 'Navigation App For Visually Impaired',
-                            imagePath: 'assets/images/ppth.png',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                            ),
-                            isTablet: isTablet,
-                          ),
-                          SizedBox(width: isMobile ? 20 : 30),
-                          ProjectCard(
-                            title: 'Little Lemon',
-                            subtitle: 'Restaurant Reservation App',
-                            imagePath: 'assets/images/res.png',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
-                            ),
-                            isTablet: isTablet,
-                          ),
-                          SizedBox(width: isMobile ? 20 : 30),
-                          ProjectCard(
-                            title: 'MiniRT',
-                            subtitle: 'Ray Tracing with C',
-                            imagePath: 'assets/images/minirt.png',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-                            ),
-                            isTablet: isTablet,
-                          ),
-                          SizedBox(width: isMobile ? 20 : 30),
-                          ProjectCard(
-                            title: 'RUN',
-                            subtitle: 'Fitness Running App',
-                            imagePath: 'assets/images/r.png',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
-                            ),
-                            isTablet: isTablet,
-                          ),
-                          SizedBox(width: isMobile ? 20 : 30),
-                          ProjectCard(
-                            title: 'Webserv',
-                            subtitle: 'A WebServer',
-                            imagePath: 'assets/images/webserv.png',
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFfa709a), Color(0xFFfee140)],
-                            ),
-                            isTablet: isTablet,
-                          ),
-                          const SizedBox(width: 40),
-                        ],
-                      ),
-                    ],
-                  ),
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
+          SizedBox(height: isMobile ? 24 : 40),
+
+          // Projects List
+          Expanded(
+            child: isMobile
+                ? _buildMobileProjects(context)
+                : _buildDesktopTabletProjects(context, isTablet),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMobileProjects(BuildContext context) {
+    final projects = _getProjects(false);
+
+    return ListView.builder(
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: projects[index],
         );
       },
     );
+  }
+
+  Widget _buildDesktopTabletProjects(BuildContext context, bool isTablet) {
+    final projects = _getProjects(isTablet);
+
+    return ScrollConfiguration(
+      behavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {...PointerDeviceKind.values},
+      ),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.only(bottom: 20),
+        children: [
+          Row(
+            children: [
+              for (int i = 0; i < projects.length; i++) ...[
+                projects[i],
+                if (i < projects.length - 1) const SizedBox(width: 30),
+              ],
+            ],
+          ),
+          const SizedBox(width: 40),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _getProjects(bool isTablet) {
+    return [
+      ProjectCard(
+        title: 'ProtectivePath',
+        subtitle: 'Navigation App For Visually Impaired',
+        imagePath: 'assets/images/ppth.png',
+        gradient: const LinearGradient(
+          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+        ),
+        isTablet: isTablet,
+      ),
+      ProjectCard(
+        title: 'Little Lemon',
+        subtitle: 'Restaurant Reservation App',
+        imagePath: 'assets/images/res.png',
+        gradient: const LinearGradient(
+          colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
+        ),
+        isTablet: isTablet,
+      ),
+      ProjectCard(
+        title: 'MiniRT',
+        subtitle: 'Ray Tracing with C',
+        imagePath: 'assets/images/minirt.png',
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
+        ),
+        isTablet: isTablet,
+      ),
+      ProjectCard(
+        title: 'RUN',
+        subtitle: 'Fitness Running App',
+        imagePath: 'assets/images/r.png',
+        gradient: const LinearGradient(
+          colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
+        ),
+        isTablet: isTablet,
+      ),
+      ProjectCard(
+        title: 'Webserv',
+        subtitle: 'A WebServer',
+        imagePath: 'assets/images/webserv.png',
+        gradient: const LinearGradient(
+          colors: [Color(0xFFfa709a), Color(0xFFfee140)],
+        ),
+        isTablet: isTablet,
+      ),
+    ];
   }
 }
 
@@ -152,8 +179,10 @@ class _ProjectCardState extends State<ProjectCard> {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
-    final cardWidth = isMobile ? 280.0 : (widget.isTablet ? 320.0 : 380.0);
-    final cardHeight = isMobile ? 420.0 : (widget.isTablet ? 480.0 : 540.0);
+    final cardWidth = isMobile
+        ? double.infinity
+        : (widget.isTablet ? 320.0 : 380.0);
+    final cardHeight = isMobile ? 400.0 : (widget.isTablet ? 480.0 : 540.0);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -286,7 +315,6 @@ class _ProjectCardState extends State<ProjectCard> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
                         Text(
                           widget.subtitle,
                           style: GoogleFonts.inter(

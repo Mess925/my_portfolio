@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'constants.dart';
 import 'about_section.dart';
 import 'projects_section.dart';
+import 'contact_section.dart'; // Add this import
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -79,7 +80,11 @@ class _HomePageState extends State<HomePage> {
                       setState(() => _currentPage = page);
                     }
                   },
-                  children: const [AboutSection(), ProjectsSection()],
+                  children: const [
+                    AboutSection(),
+                    ProjectsSection(),
+                    ContactSection(), // Now properly using the 3rd page
+                  ],
                 ),
               ),
             ],
@@ -88,7 +93,7 @@ class _HomePageState extends State<HomePage> {
           // Page indicators (Desktop only)
           if (Responsive.isDesktop(context)) _buildPageIndicators(),
 
-          // Scroll hint on first page
+          // Scroll hint on first page (Mobile only)
           if (_currentPage == 0 && Responsive.isMobile(context))
             _buildScrollHint(),
         ],

@@ -1,18 +1,18 @@
-// about_section.dart
+// contact_section.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 
-class AboutSection extends StatefulWidget {
-  const AboutSection({Key? key}) : super(key: key);
+class ContactSection extends StatefulWidget {
+  const ContactSection({Key? key}) : super(key: key);
 
   @override
-  State<AboutSection> createState() => _AboutSectionState();
+  State<ContactSection> createState() => _ContactSectionState();
 }
 
-class _AboutSectionState extends State<AboutSection>
+class _ContactSectionState extends State<ContactSection>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -45,6 +45,13 @@ class _AboutSectionState extends State<AboutSection>
     super.dispose();
   }
 
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
@@ -59,13 +66,13 @@ class _AboutSectionState extends State<AboutSection>
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildHeader(context),
                   SizedBox(height: isMobile ? 40 : 60),
-                  _buildBio(context),
+                  _buildContactInfo(context),
                   SizedBox(height: isMobile ? 40 : 60),
-                  _buildSkills(context),
+                  _buildSocialLinks(context),
                 ],
               ),
             ),
@@ -79,12 +86,10 @@ class _AboutSectionState extends State<AboutSection>
     final isMobile = Responsive.isMobile(context);
 
     return Column(
-      crossAxisAlignment: isMobile
-          ? CrossAxisAlignment.center
-          : CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'MEET',
+          'GET IN TOUCH',
           style: GoogleFonts.inter(
             fontSize: Responsive.fontSize(
               context,
@@ -102,11 +107,11 @@ class _AboutSectionState extends State<AboutSection>
           shaderCallback: (bounds) =>
               AppColors.primaryGradient.createShader(bounds),
           child: Text(
-            'HAN MIN THANT',
+            'LET\'S CONNECT',
             style: GoogleFonts.abrilFatface(
               fontSize: Responsive.fontSize(
                 context,
-                mobile: 48,
+                mobile: 40,
                 tablet: 72,
                 desktop: 96,
               ),
@@ -115,103 +120,153 @@ class _AboutSectionState extends State<AboutSection>
               fontWeight: FontWeight.bold,
               letterSpacing: 2,
             ),
-            textAlign: isMobile ? TextAlign.center : TextAlign.start,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          'Mobile App Developer',
+          'I\'m always open to new opportunities and collaborations',
           style: GoogleFonts.inter(
             fontSize: Responsive.fontSize(
               context,
-              mobile: 20,
-              tablet: 24,
-              desktop: 28,
+              mobile: 16,
+              tablet: 18,
+              desktop: 20,
             ),
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withOpacity(0.7),
             fontWeight: FontWeight.w300,
-            letterSpacing: 1,
+            letterSpacing: 0.5,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildBio(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        gradient: AppColors.cardGradient,
-        borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Text(
-        '''I'm a recent Computer Science graduate with First Class Honours from Coventry University. Currently honing my coding skills at 42 Singapore, I'm passionate about mobile app development.
-
-I specialize in Swift and Flutter for cross-platform applications, with strong backend capabilities in Python. My focus is on creating intuitive, accessible mobile experiences that solve real-world problems.''',
-        style: GoogleFonts.inter(
-          fontSize: Responsive.fontSize(
-            context,
-            mobile: 16,
-            tablet: 17,
-            desktop: 18,
-          ),
-          color: Colors.white.withOpacity(0.85),
-          height: 1.8,
-          letterSpacing: 0.3,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSkills(BuildContext context) {
+  Widget _buildContactInfo(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
     final isTablet = Responsive.isTablet(context);
-    // Center only on mobile, not on tablet or desktop
-    final shouldCenter = isMobile && !isTablet;
 
-    final skills = [
+    final contacts = [
       {
-        'name': 'Swift',
-        'icon': FontAwesomeIcons.swift,
-        'color': const Color(0xFFFF6F00),
+        'icon': FontAwesomeIcons.envelope,
+        'title': 'Email',
+        'value': 'hanminthant222@gmail.com',
+        'url': 'mailto:hanminthant222@gmail.com',
+        'color': const Color(0xFFEA4335),
       },
       {
-        'name': 'Flutter',
-        'icon': FontAwesomeIcons.code,
-        'color': const Color(0xFF00ACC1),
+        'icon': FontAwesomeIcons.phone,
+        'title': 'Phone',
+        'value': '+65 8824 7721',
+        'url': 'tel:+6588247721',
+        'color': const Color(0xFF25D366),
       },
       {
-        'name': 'Dart',
-        'icon': FontAwesomeIcons.dartLang,
-        'color': const Color(0xFF0175C2),
-      },
-      {
-        'name': 'Python',
-        'icon': FontAwesomeIcons.python,
-        'color': const Color(0xFF3776AB),
-      },
-      {
-        'name': 'C/C++',
-        'icon': FontAwesomeIcons.c,
-        'color': const Color(0xFF5C6BC0),
+        'icon': FontAwesomeIcons.locationDot,
+        'title': 'Location',
+        'value': 'Singapore',
+        'url': null,
+        'color': const Color(0xFF00BCD4),
       },
     ];
 
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: contacts.map((contact) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: _ContactCard(
+              icon: contact['icon'] as IconData,
+              title: contact['title'] as String,
+              value: contact['value'] as String,
+              url: contact['url'] as String?,
+              color: contact['color'] as Color,
+              onTap: contact['url'] != null
+                  ? () => _launchURL(contact['url'] as String)
+                  : null,
+            ),
+          );
+        }).toList(),
+      );
+    } else if (isTablet) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _ContactCard(
+                  icon: contacts[0]['icon'] as IconData,
+                  title: contacts[0]['title'] as String,
+                  value: contacts[0]['value'] as String,
+                  url: contacts[0]['url'] as String?,
+                  color: contacts[0]['color'] as Color,
+                  onTap: contacts[0]['url'] != null
+                      ? () => _launchURL(contacts[0]['url'] as String)
+                      : null,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _ContactCard(
+                  icon: contacts[1]['icon'] as IconData,
+                  title: contacts[1]['title'] as String,
+                  value: contacts[1]['value'] as String,
+                  url: contacts[1]['url'] as String?,
+                  color: contacts[1]['color'] as Color,
+                  onTap: contacts[1]['url'] != null
+                      ? () => _launchURL(contacts[1]['url'] as String)
+                      : null,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _ContactCard(
+            icon: contacts[2]['icon'] as IconData,
+            title: contacts[2]['title'] as String,
+            value: contacts[2]['value'] as String,
+            url: contacts[2]['url'] as String?,
+            color: contacts[2]['color'] as Color,
+            onTap: contacts[2]['url'] != null
+                ? () => _launchURL(contacts[2]['url'] as String)
+                : null,
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: contacts.map((contact) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: _ContactCard(
+                icon: contact['icon'] as IconData,
+                title: contact['title'] as String,
+                value: contact['value'] as String,
+                url: contact['url'] as String?,
+                color: contact['color'] as Color,
+                onTap: contact['url'] != null
+                    ? () => _launchURL(contact['url'] as String)
+                    : null,
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    }
+  }
+
+  Widget _buildSocialLinks(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+
     return Column(
-      crossAxisAlignment: shouldCenter
+      crossAxisAlignment: isMobile
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: shouldCenter
+          mainAxisAlignment: isMobile
               ? MainAxisAlignment.center
               : MainAxisAlignment.start,
           children: [
@@ -225,11 +280,11 @@ I specialize in Swift and Flutter for cross-platform applications, with strong b
             ),
             const SizedBox(width: 16),
             Text(
-              'Technical Stack',
+              'Connect With Me',
               style: GoogleFonts.abrilFatface(
                 fontSize: Responsive.fontSize(
                   context,
-                  mobile: 28,
+                  mobile: 24,
                   tablet: 32,
                   desktop: 36,
                 ),
@@ -239,137 +294,131 @@ I specialize in Swift and Flutter for cross-platform applications, with strong b
           ],
         ),
         const SizedBox(height: 32),
-        isMobile
-            ? Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                alignment: shouldCenter
-                    ? WrapAlignment.center
-                    : WrapAlignment.start,
-                children: skills.asMap().entries.map((entry) {
-                  return TweenAnimationBuilder(
-                    duration: Duration(milliseconds: 600 + (entry.key * 100)),
-                    tween: Tween<double>(begin: 0, end: 1),
-                    curve: AppAnimations.bounceCurve,
-                    builder: (context, double value, child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: _SkillChip(skill: entry.value),
-                      );
-                    },
-                  );
-                }).toList(),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: skills.asMap().entries.map((entry) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      right: entry.key < skills.length - 1 ? 16 : 0,
-                    ),
-                    child: TweenAnimationBuilder(
-                      duration: Duration(milliseconds: 600 + (entry.key * 100)),
-                      tween: Tween<double>(begin: 0, end: 1),
-                      curve: AppAnimations.bounceCurve,
-                      builder: (context, double value, child) {
-                        return Transform.scale(
-                          scale: value,
-                          child: _SkillChip(skill: entry.value),
-                        );
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
+        SocialButtonsRow(isMobile: isMobile),
       ],
     );
   }
 }
 
-class _SkillChip extends StatefulWidget {
-  final Map<String, dynamic> skill;
+class _ContactCard extends StatefulWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+  final String? url;
+  final Color color;
+  final VoidCallback? onTap;
 
-  const _SkillChip({required this.skill});
+  const _ContactCard({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.url,
+    required this.color,
+    this.onTap,
+  });
 
   @override
-  State<_SkillChip> createState() => _SkillChipState();
+  State<_ContactCard> createState() => _ContactCardState();
 }
 
-class _SkillChipState extends State<_SkillChip> {
+class _ContactCardState extends State<_ContactCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: AppAnimations.fast,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: _isHovered
-                ? [
-                    widget.skill['color'] as Color,
-                    (widget.skill['color'] as Color).withOpacity(0.7),
-                  ]
-                : [
-                    (widget.skill['color'] as Color).withOpacity(0.2),
-                    (widget.skill['color'] as Color).withOpacity(0.1),
-                  ],
-          ),
-          borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall),
-          border: Border.all(
-            color: (widget.skill['color'] as Color).withOpacity(
-              _isHovered ? 0.8 : 0.3,
+      onEnter: widget.url != null
+          ? (_) => setState(() => _isHovered = true)
+          : null,
+      onExit: widget.url != null
+          ? (_) => setState(() => _isHovered = false)
+          : null,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: AppAnimations.normal,
+          padding: EdgeInsets.all(isMobile ? 24 : 28),
+          decoration: BoxDecoration(
+            gradient: _isHovered
+                ? LinearGradient(
+                    colors: [
+                      widget.color.withOpacity(0.15),
+                      widget.color.withOpacity(0.05),
+                    ],
+                  )
+                : AppColors.cardGradient,
+            borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
+            border: Border.all(
+              color: _isHovered
+                  ? widget.color.withOpacity(0.5)
+                  : Colors.white.withOpacity(0.1),
+              width: 1.5,
             ),
-            width: 2,
-          ),
-          boxShadow: _isHovered
-              ? [
-                  BoxShadow(
-                    color: (widget.skill['color'] as Color).withOpacity(0.4),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : [],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FaIcon(
-              widget.skill['icon'] as IconData,
-              color: Colors.white,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              widget.skill['name'] as String,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+            boxShadow: [
+              BoxShadow(
+                color: _isHovered
+                    ? widget.color.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.3),
+                blurRadius: _isHovered ? 20 : 10,
+                offset: const Offset(0, 5),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedContainer(
+                duration: AppAnimations.normal,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: widget.color.withOpacity(_isHovered ? 0.2 : 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: FaIcon(
+                  widget.icon,
+                  color: widget.color,
+                  size: isMobile ? 24 : 28,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                widget.title,
+                style: GoogleFonts.inter(
+                  fontSize: isMobile ? 13 : 15,
+                  color: Colors.white.withOpacity(0.6),
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.value,
+                style: GoogleFonts.inter(
+                  fontSize: isMobile ? 14 : 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.3,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Social Buttons Component
 class SocialButtonsRow extends StatelessWidget {
   final bool isMobile;
-  final bool isTablet;
 
-  const SocialButtonsRow({
-    Key? key,
-    required this.isMobile,
-    required this.isTablet,
-  }) : super(key: key);
+  const SocialButtonsRow({Key? key, required this.isMobile}) : super(key: key);
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -380,6 +429,8 @@ class SocialButtonsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = Responsive.isTablet(context);
+
     final personalLinks = [
       SocialLink(
         icon: FontAwesomeIcons.instagram,
@@ -422,24 +473,31 @@ class SocialButtonsRow extends StatelessWidget {
       ),
     ];
 
-    if (isMobile || isTablet) {
+    if (isMobile) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildSection('Personal', personalLinks, true),
           const SizedBox(height: 32),
           _buildSection('Professional', professionalLinks, true),
         ],
       );
-    } else {
+    } else if (isTablet) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: _buildSection('Personal', personalLinks, false)),
-          const SizedBox(width: 80),
-          Expanded(
-            child: _buildSection('Professional', professionalLinks, false),
-          ),
+          _buildSection('Personal', personalLinks, false),
+          const SizedBox(width: 20),
+          _buildSection('Professional', professionalLinks, false),
+        ],
+      );
+    } else {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSection('Personal', personalLinks, false),
+          const SizedBox(width: 20),
+          _buildSection('Professional', professionalLinks, false),
         ],
       );
     }
@@ -456,35 +514,34 @@ class SocialButtonsRow extends StatelessWidget {
           : CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          header,
-          style: GoogleFonts.inter(
-            fontSize: isMobileLayout ? 18 : 20,
-            color: Colors.white.withOpacity(0.7),
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1,
-          ),
-        ),
-        SizedBox(height: isMobileLayout ? 16 : 20),
+        // Text(
+        //   header,
+        //   style: GoogleFonts.inter(
+        //     fontSize: isMobileLayout ? 16 : 18,
+        //     color: Colors.white.withOpacity(0.7),
+        //     fontWeight: FontWeight.w600,
+        //     letterSpacing: 1,
+        //   ),
+        // ),
+        // SizedBox(height: isMobileLayout ? 16 : 20),
         isMobileLayout
-            ? Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                alignment: WrapAlignment.center,
-                children: links
-                    .map(
-                      (link) => _SocialButton(
-                        icon: link.icon,
-                        label: link.label,
-                        color: link.color,
-                        isMobile: isMobileLayout,
-                        onTap: () => _launchURL(link.url),
-                      ),
-                    )
-                    .toList(),
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < links.length; i++) ...[
+                    _SocialButton(
+                      icon: links[i].icon,
+                      label: links[i].label,
+                      color: links[i].color,
+                      isMobile: isMobileLayout,
+                      onTap: () => _launchURL(links[i].url),
+                    ),
+                    if (i < links.length - 1) const SizedBox(width: 8),
+                  ],
+                ],
               )
             : Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   for (int i = 0; i < links.length; i++) ...[
                     _SocialButton(
@@ -541,8 +598,8 @@ class _SocialButtonState extends State<_SocialButton> {
 
   @override
   Widget build(BuildContext context) {
-    final double buttonSize = widget.isMobile ? 70 : 80;
-    final double iconSize = widget.isMobile ? 28 : 32;
+    final double buttonSize = widget.isMobile ? 60 : 80;
+    final double iconSize = widget.isMobile ? 22 : 28;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -607,7 +664,7 @@ class _SocialButtonState extends State<_SocialButton> {
               Text(
                 widget.label,
                 style: GoogleFonts.inter(
-                  fontSize: widget.isMobile ? 11 : 12,
+                  fontSize: widget.isMobile ? 10 : 12,
                   color: _isHovered
                       ? Colors.white
                       : Colors.white.withOpacity(0.6),
@@ -615,6 +672,8 @@ class _SocialButtonState extends State<_SocialButton> {
                   letterSpacing: 0.5,
                 ),
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
