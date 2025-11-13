@@ -1,8 +1,7 @@
+// project_detail_page.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
-import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'constants.dart';
 
 class ProjectDetails {
   final String overview;
@@ -69,23 +68,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
     super.dispose();
   }
 
-  double getFontSize(
-    double mobile,
-    double tablet,
-    double desktop,
-    bool isMobile,
-    bool isTablet,
-  ) {
-    if (isMobile) return mobile;
-    if (isTablet) return tablet;
-    return desktop;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 600;
-    final isTablet = width >= 600 && width < 1024;
+    final isMobile = Responsive.isMobile(context);
+    final isTablet = Responsive.isTablet(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -97,8 +83,13 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
         title: Text(
           'HAN',
           style: GoogleFonts.abrilFatface(
-            fontSize: getFontSize(40, 50, 60, isMobile, isTablet),
-            color: Colors.grey.withOpacity(0.8),
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 32,
+              tablet: 40,
+              desktop: 48,
+            ),
+            color: Colors.white.withOpacity(0.8),
             letterSpacing: 2,
           ),
         ),
@@ -107,15 +98,15 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
             padding: EdgeInsets.only(right: isMobile ? 16 : 40),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
                 color: Colors.white.withOpacity(0.05),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
               child: IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(Icons.close_rounded, size: 24),
                 onPressed: () => Navigator.pop(context),
                 color: Colors.white,
                 tooltip: 'Close',
@@ -140,132 +131,99 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 20 : (isTablet ? 30 : 40),
+                horizontal: Responsive.horizontalPadding(context),
                 vertical: isMobile ? 40 : 60,
               ),
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
                   position: _slideAnimation,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Project Title
-                      Text(
-                        widget.title,
-                        style: GoogleFonts.poppins(
-                          fontSize: getFontSize(32, 40, 48, isMobile, isTablet),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
-                      SizedBox(height: isMobile ? 12 : 16),
-
-                      // Subtitle
-                      Text(
-                        widget.subtitle,
-                        style: GoogleFonts.poppins(
-                          fontSize: getFontSize(16, 18, 20, isMobile, isTablet),
-                          color: Colors.grey.shade400,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-
-                      SizedBox(height: isMobile ? 40 : 60),
-
-                      // Divider
-                      Container(
-                        height: 2,
-                        width: isMobile ? 60 : 80,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.white, Colors.white.withOpacity(0)],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: isMobile ? 40 : 60),
-
-                      // Overview Section
-                      _buildSection(
-                        'Overview',
-                        widget.details.overview,
-                        isMobile,
-                        isTablet,
-                      ),
-
-                      SizedBox(height: isMobile ? 30 : 40),
-
-                      // Key Features Section
-                      _buildFeaturesSection(
-                        'Key Features',
-                        widget.details.keyFeatures,
-                        isMobile,
-                        isTablet,
-                      ),
-
-                      SizedBox(height: isMobile ? 30 : 40),
-
-                      _buildSection(
-                        'Technologies',
-                        widget.details.technologies,
-                        isMobile,
-                        isTablet,
-                      ),
-
-                      SizedBox(height: isMobile ? 40 : 60),
-
-                      if (widget.details.ctaButtonText != null)
-                        Center(
-                          child: MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              child: ElevatedButton(
-                                onPressed:
-                                    widget.details.onCtaPressed ??
-                                    () {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text('No action yet.'),
-                                          backgroundColor: Colors.grey.shade800,
-                                        ),
-                                      );
-                                    },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: isMobile ? 32 : 48,
-                                    vertical: isMobile ? 16 : 20,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  elevation: 0,
-                                ),
-                                child: Text(
-                                  widget.details.ctaButtonText!,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: getFontSize(
-                                      14,
-                                      15,
-                                      16,
-                                      isMobile,
-                                      isTablet,
-                                    ),
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 900),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          Text(
+                            widget.title,
+                            style: GoogleFonts.abrilFatface(
+                              fontSize: Responsive.fontSize(
+                                context,
+                                mobile: 36,
+                                tablet: 48,
+                                desktop: 56,
                               ),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              height: 1.2,
                             ),
                           ),
-                        ),
-                    ],
+                          SizedBox(height: isMobile ? 12 : 16),
+
+                          // Subtitle
+                          Text(
+                            widget.subtitle,
+                            style: GoogleFonts.inter(
+                              fontSize: Responsive.fontSize(
+                                context,
+                                mobile: 16,
+                                tablet: 18,
+                                desktop: 20,
+                              ),
+                              color: AppColors.primaryCyan,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+
+                          SizedBox(height: isMobile ? 40 : 60),
+
+                          // Divider
+                          Container(
+                            height: 2,
+                            width: isMobile ? 60 : 80,
+                            decoration: BoxDecoration(
+                              gradient: AppColors.primaryGradient,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+
+                          SizedBox(height: isMobile ? 40 : 60),
+
+                          // Overview
+                          _buildSection(
+                            'Overview',
+                            widget.details.overview,
+                            context,
+                          ),
+
+                          SizedBox(height: isMobile ? 30 : 40),
+
+                          // Features
+                          _buildFeaturesSection(
+                            'Key Features',
+                            widget.details.keyFeatures,
+                            context,
+                          ),
+
+                          SizedBox(height: isMobile ? 30 : 40),
+
+                          // Technologies
+                          _buildSection(
+                            'Technologies',
+                            widget.details.technologies,
+                            context,
+                          ),
+
+                          SizedBox(height: isMobile ? 40 : 60),
+
+                          // CTA Button
+                          if (widget.details.ctaButtonText != null)
+                            Center(child: _buildCtaButton(context)),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -276,32 +234,37 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
     );
   }
 
-  Widget _buildSection(
-    String title,
-    String content,
-    bool isMobile,
-    bool isTablet,
-  ) {
+  Widget _buildSection(String title, String content, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: GoogleFonts.poppins(
-            fontSize: getFontSize(20, 22, 24, isMobile, isTablet),
-            fontWeight: FontWeight.w600,
+          style: GoogleFonts.inter(
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 22,
+              tablet: 26,
+              desktop: 28,
+            ),
+            fontWeight: FontWeight.w700,
             color: Colors.white,
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: isMobile ? 12 : 16),
+        const SizedBox(height: 16),
         Text(
           content,
-          style: GoogleFonts.poppins(
-            fontSize: getFontSize(14, 15, 16, isMobile, isTablet),
-            color: Colors.grey.shade300,
+          style: GoogleFonts.inter(
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 15,
+              tablet: 16,
+              desktop: 17,
+            ),
+            color: Colors.white.withOpacity(0.85),
             height: 1.8,
-            fontWeight: FontWeight.w300,
+            letterSpacing: 0.3,
           ),
         ),
       ],
@@ -311,57 +274,142 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
   Widget _buildFeaturesSection(
     String title,
     List<String> features,
-    bool isMobile,
-    bool isTablet,
+    BuildContext context,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: GoogleFonts.poppins(
-            fontSize: getFontSize(20, 22, 24, isMobile, isTablet),
-            fontWeight: FontWeight.w600,
+          style: GoogleFonts.inter(
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 22,
+              tablet: 26,
+              desktop: 28,
+            ),
+            fontWeight: FontWeight.w700,
             color: Colors.white,
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: isMobile ? 12 : 16),
-        ...features.map(
-          (feature) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+        const SizedBox(height: 16),
+        ...features.asMap().entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '• ',
-                  style: GoogleFonts.poppins(
-                    fontSize: getFontSize(14, 15, 16, isMobile, isTablet),
-                    color: Colors.grey.shade300,
-                    height: 1.8,
-                    fontWeight: FontWeight.w300,
+                Container(
+                  margin: const EdgeInsets.only(top: 8, right: 12),
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    shape: BoxShape.circle,
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    feature,
-                    style: GoogleFonts.poppins(
-                      fontSize: getFontSize(14, 15, 16, isMobile, isTablet),
-                      color: Colors.grey.shade300,
+                    entry.value,
+                    style: GoogleFonts.inter(
+                      fontSize: Responsive.fontSize(
+                        context,
+                        mobile: 15,
+                        tablet: 16,
+                        desktop: 17,
+                      ),
+                      color: Colors.white.withOpacity(0.85),
                       height: 1.8,
-                      fontWeight: FontWeight.w300,
+                      letterSpacing: 0.3,
                     ),
                   ),
                 ),
               ],
             ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Widget _buildCtaButton(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryCyan.withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed:
+              widget.details.onCtaPressed ??
+              () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Feature coming soon!',
+                      style: GoogleFonts.inter(),
+                    ),
+                    backgroundColor: Colors.grey.shade800,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.borderRadiusSmall,
+                      ),
+                    ),
+                  ),
+                );
+              },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: EdgeInsets.symmetric(
+              horizontal: Responsive.fontSize(
+                context,
+                mobile: 32,
+                tablet: 40,
+                desktop: 48,
+              ),
+              vertical: Responsive.fontSize(
+                context,
+                mobile: 16,
+                tablet: 18,
+                desktop: 20,
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          child: Text(
+            widget.details.ctaButtonText!,
+            style: GoogleFonts.inter(
+              fontSize: Responsive.fontSize(
+                context,
+                mobile: 14,
+                tablet: 15,
+                desktop: 16,
+              ),
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1,
+              color: Colors.white,
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
 
+// Project Details Data
 ProjectDetails getProjectDetails(String title) {
   switch (title) {
     case 'ProtectivePath':

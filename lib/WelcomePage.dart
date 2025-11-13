@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:portfolio/Projects.dart';
+import 'package:portfolio/projects_section.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Contact.dart';
-import 'Home.dart';
+import 'home_page.dart';
 import 'Helper.dart';
 
 class MyApp extends StatelessWidget {
@@ -52,11 +51,7 @@ class _ScrollablePagesState extends State<ScrollablePages> {
       body: PageView(
         controller: _controller,
         scrollDirection: Axis.vertical,
-        children: [
-          HomePage(onNavigate: _navigateToPage),
-          const ProjectPage(),
-          const ContactPage(),
-        ],
+        children: [const HomePage(), const ProjectsSection()],
       ),
     );
   }
