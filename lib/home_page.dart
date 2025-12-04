@@ -52,7 +52,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Animated background with gradient
+          // Terminal-style background
+          Container(
+            decoration: const BoxDecoration(color: AppColors.darkBackground),
+          ),
+
+          // Subtle scanline effect
+          Positioned.fill(child: CustomPaint(painter: _TerminalGridPainter())),
+
+          // Animated green glow
           AnimatedContainer(
             duration: AppAnimations.slow,
             decoration: BoxDecoration(
@@ -64,9 +72,9 @@ class _HomePageState extends State<HomePage> {
                     : Alignment.bottomLeft,
                 radius: 1.5,
                 colors: [
-                  AppColors.primary.withOpacity(0.15),
-                  AppColors.secondary.withOpacity(0.08),
-                  AppColors.darkBackground,
+                  AppColors.primary.withOpacity(0.08),
+                  AppColors.secondary.withOpacity(0.04),
+                  Colors.transparent,
                 ],
               ),
             ),
@@ -115,13 +123,16 @@ class _HomePageState extends State<HomePage> {
       height: isMobile ? 70 : 80,
       padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
       decoration: BoxDecoration(
-        color: AppColors.darkerBackground.withOpacity(0.8),
+        color: AppColors.darkerBackground.withOpacity(0.95),
         border: Border(
-          bottom: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 1),
+          bottom: BorderSide(
+            color: AppColors.primary.withOpacity(0.3),
+            width: 2,
+          ),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -129,17 +140,37 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Row(
         children: [
-          // Logo with gradient
-          ShaderMask(
-            shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
-            child: Text(
-              'HAN',
-              style: GoogleFonts.abrilFatface(
-                fontSize: isMobile ? 24 : 28,
-                color: Colors.white,
-                letterSpacing: 3,
-              ),
+          // Terminal prompt style logo
+          Text(
+            isMobile ? 'C:\\MESS_T>' : 'C:\\PORTFOLIO\\MESS_T>',
+            style: GoogleFonts.courierPrime(
+              fontSize: isMobile ? 16 : 20,
+              color: AppColors.primary,
+              letterSpacing: 0,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          // Blinking cursor
+          TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 800),
+            builder: (context, double value, child) {
+              return Opacity(
+                opacity: value > 0.5 ? 1.0 : 0.0,
+                child: Text(
+                  '_',
+                  style: GoogleFonts.courierPrime(
+                    fontSize: isMobile ? 16 : 20,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+            onEnd: () {
+              // Restart animation
+              if (mounted) setState(() {});
+            },
           ),
           const Spacer(),
 
@@ -166,15 +197,15 @@ class _HomePageState extends State<HomePage> {
           if (isMobile)
             Text(
               _currentPage == 0
-                  ? 'PROJECTS'
+                  ? '[PROJECTS.EXE]'
                   : _currentPage == 1
-                  ? 'ABOUT'
-                  : 'CONTACT',
-              style: GoogleFonts.inter(
-                fontSize: 14,
+                  ? '[ABOUT.EXE]'
+                  : '[CONTACT.EXE]',
+              style: GoogleFonts.courierPrime(
+                fontSize: 12,
                 color: AppColors.primary,
-                letterSpacing: 2,
-                fontWeight: FontWeight.w600,
+                letterSpacing: 0,
+                fontWeight: FontWeight.bold,
               ),
             ),
         ],
@@ -188,11 +219,11 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         color: AppColors.darkerBackground.withOpacity(0.95),
         border: Border(
-          top: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 1),
+          top: BorderSide(color: AppColors.primary.withOpacity(0.3), width: 2),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.15),
+            color: AppColors.primary.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -202,23 +233,23 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _MobileNavItem(
-            icon: Icons.work_outline,
-            activeIcon: Icons.work,
-            label: 'Projects',
+            icon: Icons.folder_open,
+            activeIcon: Icons.folder,
+            label: 'PROJECTS',
             isActive: _currentPage == 0,
             onTap: () => _navigateToPage(0),
           ),
           _MobileNavItem(
-            icon: Icons.person_outline,
-            activeIcon: Icons.person,
-            label: 'About',
+            icon: Icons.info_outline,
+            activeIcon: Icons.info,
+            label: 'ABOUT',
             isActive: _currentPage == 1,
             onTap: () => _navigateToPage(1),
           ),
           _MobileNavItem(
-            icon: Icons.mail_outline,
-            activeIcon: Icons.mail,
-            label: 'Contact',
+            icon: Icons.email_outlined,
+            activeIcon: Icons.email,
+            label: 'CONTACT',
             isActive: _currentPage == 2,
             onTap: () => _navigateToPage(2),
           ),
@@ -324,13 +355,13 @@ class _MobileNavItem extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: GoogleFonts.inter(
-                fontSize: 11,
+              style: GoogleFonts.courierPrime(
+                fontSize: 10,
                 color: isActive
                     ? AppColors.primary
-                    : Colors.white.withOpacity(0.5),
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                letterSpacing: 0.5,
+                    : AppColors.primary.withOpacity(0.5),
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                letterSpacing: 0,
               ),
             ),
           ],
@@ -368,38 +399,92 @@ class _NavButtonState extends State<_NavButton> {
         child: TextButton(
           onPressed: widget.onPressed,
           style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           ),
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (widget.isActive)
+                Text(
+                  '> ',
+                  style: GoogleFonts.courierPrime(
+                    fontSize: 16,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               Text(
                 widget.label,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.courierPrime(
                   fontSize: 14,
                   color: widget.isActive || _isHovered
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.6),
-                  letterSpacing: 1.5,
+                      ? AppColors.primary
+                      : AppColors.primary.withOpacity(0.5),
+                  letterSpacing: 1,
                   fontWeight: widget.isActive
-                      ? FontWeight.w600
-                      : FontWeight.w400,
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
               ),
-              const SizedBox(height: 4),
-              AnimatedContainer(
-                duration: AppAnimations.normal,
-                height: 2,
-                width: widget.isActive ? 40 : (_isHovered ? 20 : 0),
-                decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(2),
+              if (widget.isActive)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 800),
+                    builder: (context, double value, child) {
+                      return Opacity(
+                        opacity: value > 0.5 ? 1.0 : 0.0,
+                        child: Container(
+                          width: 10,
+                          height: 16,
+                          color: AppColors.primary,
+                        ),
+                      );
+                    },
+                    onEnd: () {
+                      if (mounted) setState(() {});
+                    },
+                  ),
                 ),
-              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+// Terminal grid painter for retro CRT background with scanlines
+class _TerminalGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.primary.withOpacity(0.05)
+      ..strokeWidth = 1;
+
+    const gap = 50.0;
+
+    // Draw vertical lines
+    for (double x = 0; x < size.width; x += gap) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+
+    // Draw CRT scanlines
+    final scanlinePaint = Paint()
+      ..color = AppColors.scanlineColor.withOpacity(0.3)
+      ..strokeWidth = 1;
+
+    for (double y = 0; y < size.height; y += 4) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), scanlinePaint);
+    }
+
+    // Draw horizontal grid lines
+    for (double y = 0; y < size.height; y += gap) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

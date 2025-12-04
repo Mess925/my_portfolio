@@ -15,10 +15,10 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
 
   static const _duration = Duration(seconds: 5);
-  static const _bg = Color(0xFF0D1117);
-  static const _accent = Color(0xFF8B5CF6);  // Purple accent
-  static const _secondAccent = Color(0xFF3B82F6);  // Blue accent
-  static const _text = Colors.white;
+  static const _bg = Color(0xFF000000); // Pure black CRT
+  static const _accent = Color(0xFF00FF00); // Pure terminal green
+  static const _secondAccent = Color(0xFF00CC00); // Darker green
+  static const _text = Color(0xFF00FF00); // Bright terminal green
 
   @override
   void initState() {
@@ -101,15 +101,17 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Text(
                           "HTHANT",
                           style: TextStyle(
+                            fontFamily: 'Courier',
                             fontSize: 70,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 8,
+                            letterSpacing: 12,
                             color: _text,
                             shadows: [
                               Shadow(
                                 color: _accent.withOpacity(0.9),
-                                blurRadius: 20 + glow * 25,
+                                blurRadius: 30 + glow * 35,
                               ),
+                              Shadow(color: _accent, blurRadius: 10),
                             ],
                           ),
                         ),
@@ -123,11 +125,12 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ),
                         child: Text(
-                          "Mobile App Developer",
+                          ">>> INITIALIZING PORTFOLIO SYSTEM...",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontFamily: 'Courier',
+                            fontSize: 16,
                             color: _text.withOpacity(0.85),
-                            letterSpacing: 2.5,
+                            letterSpacing: 2,
                           ),
                         ),
                       ),
@@ -147,8 +150,8 @@ class _SplashScreenState extends State<SplashScreen>
 class _GridPainter extends CustomPainter {
   final double t;
   final Paint _paint = Paint()
-    ..color = Colors.white.withOpacity(0.03)
-    ..strokeWidth = 0.6;
+    ..color = const Color(0xFF00FF00).withOpacity(0.08)
+    ..strokeWidth = 1;
 
   _GridPainter(this.t);
 
@@ -181,7 +184,6 @@ class _GridPainter extends CustomPainter {
 class _OrbitPainter extends CustomPainter {
   final double t;
   final int count = 24;
-  final _rand = math.Random(10);
 
   _OrbitPainter(this.t);
 
@@ -197,13 +199,14 @@ class _OrbitPainter extends CustomPainter {
       final y = center.dy + math.sin(angle) * radius;
 
       final alpha = (math.sin(t * 6 + i) * 0.5 + 0.5) * 0.8;
-      paint.color = Colors.white.withOpacity(alpha * 0.4);
+      paint.color = const Color(0xFF00FF00).withOpacity(alpha * 0.5);
       canvas.drawCircle(Offset(x, y), 2.5 + math.sin(i + t * 4) * 1.2, paint);
 
-      // Neon trailing effect with new accent colors
-      final hue = (i / count) * 360;
-      final particleColor = i.isEven ? const Color(0xFF8B5CF6) : const Color(0xFF3B82F6);
-      paint.color = particleColor.withOpacity(alpha * 0.6);
+      // Neon trailing effect with green accent colors
+      final particleColor = i.isEven
+          ? const Color(0xFF00FF00)
+          : const Color(0xFF00CC00);
+      paint.color = particleColor.withOpacity(alpha * 0.7);
       canvas.drawCircle(Offset(x, y), 1.2, paint);
     }
   }

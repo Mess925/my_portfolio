@@ -27,25 +27,18 @@ class ProjectsSection extends StatelessWidget {
                 ? MainAxisAlignment.center
                 : MainAxisAlignment.start,
             children: [
-              Container(
-                width: 4,
-                height: 32,
-                decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 16),
               Text(
-                'Projects',
-                style: GoogleFonts.abrilFatface(
+                r'C:\PROJECTS> DIR /W',
+                style: GoogleFonts.courierPrime(
                   fontSize: Responsive.fontSize(
                     context,
-                    mobile: 28,
-                    tablet: 32,
-                    desktop: 36,
+                    mobile: 18,
+                    tablet: 24,
+                    desktop: 28,
                   ),
-                  color: Colors.white,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -209,30 +202,24 @@ class _ProjectCardState extends State<ProjectCard> {
           height: cardHeight,
           child: Container(
             decoration: BoxDecoration(
-              gradient: AppColors.cardGradient,
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
+              color: AppColors.cardBackground.withOpacity(0.8),
               border: Border.all(
-                color: _isHovered 
-                    ? AppColors.primary.withOpacity(0.5)
-                    : Colors.white.withOpacity(0.1),
-                width: 1.5,
+                color: _isHovered
+                    ? AppColors.primary
+                    : AppColors.primary.withOpacity(0.5),
+                width: 3,
               ),
               boxShadow: _isHovered
                   ? [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withOpacity(0.4),
                         blurRadius: 30,
                         offset: const Offset(0, 15),
-                      ),
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
                       ),
                     ]
                   : [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: AppColors.primary.withOpacity(0.1),
                         blurRadius: 15,
                         offset: const Offset(0, 8),
                       ),
@@ -241,98 +228,156 @@ class _ProjectCardState extends State<ProjectCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Image Section
-                Expanded(
-                  flex: 3,
-                  child: Stack(
+                // DOS-style title bar
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _isHovered
+                        ? AppColors.primary
+                        : AppColors.primary.withOpacity(0.8),
+                    border: Border(
+                      bottom: BorderSide(color: AppColors.primary, width: 2),
+                    ),
+                  ),
+                  child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(AppSizes.borderRadiusLarge),
-                          topRight: Radius.circular(AppSizes.borderRadiusLarge),
+                      Text(
+                        '█ ',
+                        style: GoogleFonts.courierPrime(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      Expanded(
                         child: Container(
-                          decoration: BoxDecoration(gradient: widget.gradient),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isMobile ? 4 : 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black, width: 2),
+                            color: AppColors.primary,
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '╔═══ ${widget.title.toUpperCase()} ═══╗',
+                              style: GoogleFonts.courierPrime(
+                                fontSize: isMobile ? 12 : 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.3,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '[█]',
+                        style: GoogleFonts.courierPrime(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Image Section with DOS frame
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: AppColors.primary.withOpacity(0.5),
+                        width: 2,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Container(
+                          color: Colors.black,
                           child: Center(
                             child: Image.asset(
                               widget.imagePath,
                               width: double.infinity,
+                              fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return _buildPlaceholder();
                               },
                             ),
                           ),
                         ),
-                      ),
-                      // Gradient overlay on hover
-                      if (_isHovered)
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(
-                                AppSizes.borderRadiusLarge,
-                              ),
-                              topRight: Radius.circular(
-                                AppSizes.borderRadiusLarge,
-                              ),
-                            ),
+                        if (_isHovered)
+                          Positioned.fill(
                             child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(0.5),
-                                  ],
-                                ),
-                              ),
+                              color: AppColors.primary.withOpacity(0.2),
                               child: Center(
-                                child: Icon(
-                                  Icons.arrow_forward_rounded,
-                                  size: 48,
-                                  color: Colors.white.withOpacity(0.9),
+                                child: Text(
+                                  '>>> CLICK TO OPEN <<<',
+                                  style: GoogleFonts.courierPrime(
+                                    fontSize: isMobile ? 14 : 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor: AppColors.primary,
+                                    letterSpacing: 2,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
-                // Text Section
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: EdgeInsets.all(isMobile ? 20.0 : 24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isMobile ? 20 : 24,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          widget.subtitle,
-                          style: GoogleFonts.inter(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: isMobile ? 13 : 14,
-                            letterSpacing: 0.3,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                // DOS-style info section
+                Container(
+                  padding: EdgeInsets.all(isMobile ? 12.0 : 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    border: Border(
+                      top: BorderSide(
+                        color: AppColors.primary.withOpacity(0.3),
+                        width: 1,
+                      ),
                     ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'FILE: ${widget.title.toUpperCase()}.EXE',
+                        style: GoogleFonts.courierPrime(
+                          color: AppColors.primary,
+                          fontSize: isMobile ? 11 : 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.subtitle.toUpperCase(),
+                        style: GoogleFonts.courierPrime(
+                          color: AppColors.textSecondary,
+                          fontSize: isMobile ? 10 : 11,
+                          letterSpacing: 0,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -345,23 +390,26 @@ class _ProjectCardState extends State<ProjectCard> {
 
   Widget _buildPlaceholder() {
     return Container(
-      color: const Color(0xFF2A2A2A),
+      color: Colors.black,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.work_outline_rounded,
-              size: 60,
-              color: Colors.white.withOpacity(0.3),
+            Text(
+              '█ PROJECT DATA █',
+              style: GoogleFonts.courierPrime(
+                color: AppColors.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
-              'Project In Progress',
-              style: GoogleFonts.inter(
-                color: Colors.white.withOpacity(0.5),
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+              '>>> LOADING... <<<',
+              style: GoogleFonts.courierPrime(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

@@ -13,22 +13,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Han - Mobile Developer',
+      title: r'mess_t@terminal:~$',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFF0F0F0F),
-        textTheme: GoogleFonts.interTextTheme(
+        primarySwatch: Colors.green,
+        useMaterial3: false, // Use classic Material Design
+        scaffoldBackgroundColor: const Color(0xFF000000),
+        textTheme: GoogleFonts.courierPrimeTextTheme(
           Theme.of(context).textTheme.apply(
-            bodyColor: Colors.white,
-            displayColor: Colors.white,
+            bodyColor: const Color(0xFF00FF00),
+            displayColor: const Color(0xFF00FF00),
           ),
         ),
         colorScheme: ColorScheme.dark(
-          primary: const Color(0xFF8B5CF6),
-          secondary: const Color(0xFF3B82F6),
-          surface: const Color(0xFF1A1A1A),
-          background: const Color(0xFF0F0F0F),
+          primary: const Color(0xFF00FF00),
+          secondary: const Color(0xFF00CC00),
+          surface: const Color(0xFF001100),
+          background: const Color(0xFF000000),
         ),
       ),
       debugShowCheckedModeBanner: false,

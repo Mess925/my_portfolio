@@ -76,20 +76,21 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.darkerBackground.withOpacity(0.95),
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
-          'HAN',
-          style: GoogleFonts.abrilFatface(
+          r'C:\PORTFOLIO\PROJECT>',
+          style: GoogleFonts.courierPrime(
             fontSize: Responsive.fontSize(
               context,
-              mobile: 32,
-              tablet: 40,
-              desktop: 48,
+              mobile: 16,
+              tablet: 18,
+              desktop: 20,
             ),
-            color: Colors.white.withOpacity(0.8),
-            letterSpacing: 2,
+            color: AppColors.primary,
+            letterSpacing: 0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -97,35 +98,21 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
             padding: EdgeInsets.only(right: isMobile ? 16 : 40),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-                color: Colors.white.withOpacity(0.05),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
-                  width: 1.5,
-                ),
+                border: Border.all(color: AppColors.primary, width: 2),
+                color: Colors.black,
               ),
               child: IconButton(
-                icon: const Icon(Icons.close_rounded, size: 24),
+                icon: const Icon(Icons.close, size: 20),
                 onPressed: () => Navigator.pop(context),
-                color: Colors.white,
-                tooltip: 'Close',
+                color: AppColors.primary,
+                tooltip: 'ESC',
               ),
             ),
           ),
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment.topRight,
-            radius: 1.5,
-            colors: [
-              Colors.grey.shade900.withOpacity(0.3),
-              Colors.black,
-              Colors.black,
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(color: Colors.black),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -143,36 +130,75 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Title
-                          Text(
-                            widget.title,
-                            style: GoogleFonts.abrilFatface(
-                              fontSize: Responsive.fontSize(
-                                context,
-                                mobile: 36,
-                                tablet: 48,
-                                desktop: 56,
+                          // DOS-style header with nice box
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 20,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.primary,
+                                width: 3,
                               ),
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              height: 1.2,
+                              color: Colors.black,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primary.withOpacity(0.3),
+                                  blurRadius: 20,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.primary,
+                                    width: 2,
+                                  ),
+                                  color: AppColors.primary.withOpacity(0.1),
+                                ),
+                                child: Text(
+                                  '╔═══ ${widget.title.toUpperCase()} ═══╗',
+                                  style: GoogleFonts.courierPrime(
+                                    fontSize: isMobile ? 16 : 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primary,
+                                    letterSpacing: 1,
+                                    shadows: [
+                                      Shadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.8,
+                                        ),
+                                        blurRadius: 15,
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(height: isMobile ? 12 : 16),
 
                           // Subtitle
                           Text(
-                            widget.subtitle,
-                            style: GoogleFonts.inter(
+                            'TYPE: ${widget.subtitle.toUpperCase()}',
+                            style: GoogleFonts.courierPrime(
                               fontSize: Responsive.fontSize(
                                 context,
-                                mobile: 16,
-                                tablet: 18,
-                                desktop: 20,
+                                mobile: 12,
+                                tablet: 14,
+                                desktop: 16,
                               ),
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 0.5,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0,
                             ),
                           ),
 
@@ -180,12 +206,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
 
                           // Divider
                           Container(
-                            height: 2,
-                            width: isMobile ? 60 : 80,
-                            decoration: BoxDecoration(
-                              gradient: AppColors.primaryGradient,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
+                            height: 3,
+                            decoration: BoxDecoration(color: AppColors.primary),
                           ),
 
                           SizedBox(height: isMobile ? 40 : 60),
@@ -237,33 +259,50 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: GoogleFonts.inter(
-            fontSize: Responsive.fontSize(
-              context,
-              mobile: 22,
-              tablet: 26,
-              desktop: 28,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            border: Border.all(color: AppColors.primary, width: 2),
+          ),
+          child: Text(
+            '>>> ${title.toUpperCase()}',
+            style: GoogleFonts.courierPrime(
+              fontSize: Responsive.fontSize(
+                context,
+                mobile: 14,
+                tablet: 16,
+                desktop: 18,
+              ),
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              letterSpacing: 1,
             ),
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 16),
-        Text(
-          content,
-          style: GoogleFonts.inter(
-            fontSize: Responsive.fontSize(
-              context,
-              mobile: 15,
-              tablet: 16,
-              desktop: 17,
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColors.primary.withOpacity(0.5),
+              width: 2,
             ),
-            color: Colors.white.withOpacity(0.85),
-            height: 1.8,
-            letterSpacing: 0.3,
+            color: AppColors.cardBackground.withOpacity(0.3),
+          ),
+          child: Text(
+            content,
+            style: GoogleFonts.courierPrime(
+              fontSize: Responsive.fontSize(
+                context,
+                mobile: 13,
+                tablet: 14,
+                desktop: 15,
+              ),
+              color: AppColors.textSecondary,
+              height: 1.6,
+              letterSpacing: 0,
+            ),
           ),
         ),
       ],
@@ -278,56 +317,80 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: GoogleFonts.inter(
-            fontSize: Responsive.fontSize(
-              context,
-              mobile: 22,
-              tablet: 26,
-              desktop: 28,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            border: Border.all(color: AppColors.primary, width: 2),
+          ),
+          child: Text(
+            '>>> ${title.toUpperCase()}',
+            style: GoogleFonts.courierPrime(
+              fontSize: Responsive.fontSize(
+                context,
+                mobile: 14,
+                tablet: 16,
+                desktop: 18,
+              ),
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              letterSpacing: 1,
             ),
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 16),
-        ...features.asMap().entries.map((entry) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 8, right: 12),
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    entry.value,
-                    style: GoogleFonts.inter(
-                      fontSize: Responsive.fontSize(
-                        context,
-                        mobile: 15,
-                        tablet: 16,
-                        desktop: 17,
-                      ),
-                      color: Colors.white.withOpacity(0.85),
-                      height: 1.8,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                ),
-              ],
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColors.primary.withOpacity(0.5),
+              width: 2,
             ),
-          );
-        }).toList(),
+            color: AppColors.cardBackground.withOpacity(0.3),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: features.asMap().entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '[${entry.key + 1}] ',
+                      style: GoogleFonts.courierPrime(
+                        fontSize: Responsive.fontSize(
+                          context,
+                          mobile: 13,
+                          tablet: 14,
+                          desktop: 15,
+                        ),
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        entry.value,
+                        style: GoogleFonts.courierPrime(
+                          fontSize: Responsive.fontSize(
+                            context,
+                            mobile: 13,
+                            tablet: 14,
+                            desktop: 15,
+                          ),
+                          color: AppColors.textSecondary,
+                          height: 1.6,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
       ],
     );
   }
@@ -337,13 +400,13 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
       cursor: SystemMouseCursors.click,
       child: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(30),
+          color: Colors.black,
+          border: Border.all(color: AppColors.primary, width: 2),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: AppColors.primary.withOpacity(0.3),
+              blurRadius: 8,
+              spreadRadius: 1,
             ),
           ],
         ),
@@ -354,15 +417,14 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Feature coming soon!',
-                      style: GoogleFonts.inter(),
+                      'C:\\> FEATURE COMING SOON!',
+                      style: GoogleFonts.courierPrime(color: AppColors.primary),
                     ),
-                    backgroundColor: Colors.grey.shade800,
+                    backgroundColor: Colors.black,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppSizes.borderRadiusSmall,
-                      ),
+                      borderRadius: BorderRadius.zero,
+                      side: BorderSide(color: AppColors.primary, width: 2),
                     ),
                   ),
                 );
@@ -384,22 +446,22 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                 desktop: 20,
               ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
             ),
           ),
           child: Text(
-            widget.details.ctaButtonText!,
-            style: GoogleFonts.inter(
+            '>>> ${widget.details.ctaButtonText!.toUpperCase()}',
+            style: GoogleFonts.courierPrime(
               fontSize: Responsive.fontSize(
                 context,
                 mobile: 14,
                 tablet: 15,
                 desktop: 16,
               ),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
               letterSpacing: 1,
-              color: Colors.white,
+              color: AppColors.primary,
             ),
           ),
         ),

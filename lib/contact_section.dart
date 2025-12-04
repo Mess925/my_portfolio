@@ -87,8 +87,8 @@ class _ContactSectionState extends State<ContactSection>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'GET IN TOUCH',
-          style: GoogleFonts.inter(
+          r'C:\> TYPE CONTACT.INF',
+          style: GoogleFonts.courierPrime(
             fontSize: Responsive.fontSize(
               context,
               mobile: 14,
@@ -96,42 +96,42 @@ class _ContactSectionState extends State<ContactSection>
               desktop: 18,
             ),
             color: AppColors.primary,
-            letterSpacing: 4,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ShaderMask(
-          shaderCallback: (bounds) =>
-              AppColors.primaryGradient.createShader(bounds),
-          child: Text(
-            'LET\'S CONNECT',
-            style: GoogleFonts.abrilFatface(
-              fontSize: Responsive.fontSize(
-                context,
-                mobile: 40,
-                tablet: 72,
-                desktop: 96,
-              ),
-              color: Colors.white,
-              height: 1.0,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
+            letterSpacing: 0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          'I\'m always open to new opportunities and collaborations',
-          style: GoogleFonts.inter(
+          '═══ CONNECT ═══',
+          style: GoogleFonts.courierPrime(
             fontSize: Responsive.fontSize(
               context,
-              mobile: 16,
-              tablet: 18,
-              desktop: 20,
+              mobile: 24,
+              tablet: 40,
+              desktop: 54,
             ),
-            color: Colors.white.withOpacity(0.7),
-            fontWeight: FontWeight.w300,
+            color: AppColors.primary,
+            height: 1.2,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 4,
+            shadows: [
+              Shadow(color: AppColors.primary.withOpacity(0.8), blurRadius: 25),
+              Shadow(color: AppColors.primary, blurRadius: 10),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'REM Always open to new opportunities',
+          style: GoogleFonts.courierPrime(
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 13,
+              tablet: 15,
+              desktop: 17,
+            ),
+            color: AppColors.textMuted,
+            fontWeight: FontWeight.w400,
             letterSpacing: 0.5,
           ),
         ),
@@ -339,26 +339,19 @@ class _ContactCardState extends State<_ContactCard> {
           duration: AppAnimations.normal,
           padding: EdgeInsets.all(isMobile ? 24 : 28),
           decoration: BoxDecoration(
-            gradient: _isHovered
-                ? LinearGradient(
-                    colors: [
-                      widget.color.withOpacity(0.15),
-                      widget.color.withOpacity(0.05),
-                    ],
-                  )
-                : AppColors.cardGradient,
+            color: AppColors.cardBackground.withOpacity(0.5),
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
             border: Border.all(
               color: _isHovered
-                  ? widget.color.withOpacity(0.5)
-                  : Colors.white.withOpacity(0.1),
-              width: 1.5,
+                  ? AppColors.primary.withOpacity(0.8)
+                  : AppColors.primary.withOpacity(0.3),
+              width: 2,
             ),
             boxShadow: [
               BoxShadow(
                 color: _isHovered
-                    ? widget.color.withOpacity(0.2)
-                    : Colors.black.withOpacity(0.3),
+                    ? AppColors.primary.withOpacity(0.3)
+                    : AppColors.primary.withOpacity(0.1),
                 blurRadius: _isHovered ? 20 : 10,
                 offset: const Offset(0, 5),
               ),
@@ -373,21 +366,25 @@ class _ContactCardState extends State<_ContactCard> {
                 duration: AppAnimations.normal,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: widget.color.withOpacity(_isHovered ? 0.2 : 0.1),
+                  color: AppColors.primary.withOpacity(_isHovered ? 0.2 : 0.1),
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.5),
+                    width: 2,
+                  ),
                 ),
                 child: FaIcon(
                   widget.icon,
-                  color: widget.color,
+                  color: AppColors.primary,
                   size: isMobile ? 24 : 28,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 widget.title,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.sourceCodePro(
                   fontSize: isMobile ? 13 : 15,
-                  color: Colors.white.withOpacity(0.6),
+                  color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
                 ),
@@ -395,9 +392,9 @@ class _ContactCardState extends State<_ContactCard> {
               const SizedBox(height: 8),
               Text(
                 widget.value,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.sourceCodePro(
                   fontSize: isMobile ? 14 : 16,
-                  color: Colors.white,
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.3,
                 ),

@@ -2,32 +2,37 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary colors - Vibrant purple/blue palette
-  static const primary = Color(0xFF8B5CF6);  // Purple
-  static const primaryLight = Color(0xFFA78BFA);  // Light purple
-  static const primaryDark = Color(0xFF7C3AED);  // Dark purple
-  static const secondary = Color(0xFF3B82F6);  // Blue
-  static const accent = Color(0xFFEC4899);  // Pink accent
-  
-  // Background colors
-  static const darkBackground = Color(0xFF0F0F0F);  // Almost black
-  static const darkerBackground = Color(0xFF050505);  // Pure black
-  static const cardBackground = Color(0xFF1A1A1A);  // Dark gray
-  
-  // Text colors
-  static const textPrimary = Color(0xFFFFFFFF);
-  static const textSecondary = Color(0xFFE5E5E5);
-  static const textMuted = Color(0xFF9CA3AF);
-  
-  // Gradient combinations
+  // Classic 1990s Terminal Colors - True CRT Green on Black
+  static const primary = Color(0xFF00FF00); // Pure terminal green
+  static const primaryLight = Color(0xFF33FF33); // Bright phosphor green
+  static const primaryDark = Color(0xFF00CC00); // Dark green
+  static const secondary = Color(0xFF00FF00); // Green accent
+  static const accent = Color(0xFF00DD00); // Phosphor glow
+
+  // CRT scan effect color
+  static const scanlineColor = Color(
+    0xFF003300,
+  ); // Very dark green for scanlines
+
+  // Background colors - Pure CRT black
+  static const darkBackground = Color(0xFF000000); // Pure black
+  static const darkerBackground = Color(0xFF000000); // Pure black
+  static const cardBackground = Color(0xFF001100); // Very dark green tint
+
+  // Text colors - Phosphor green variations
+  static const textPrimary = Color(0xFF00FF00); // Bright terminal green
+  static const textSecondary = Color(0xFF00DD00); // Medium phosphor
+  static const textMuted = Color(0xFF009900); // Dim green
+
+  // Gradient combinations - Classic phosphor glow
   static const primaryGradient = LinearGradient(
-    colors: [primary, secondary],
+    colors: [Color(0xFF00FF00), Color(0xFF00CC00)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const accentGradient = LinearGradient(
-    colors: [primary, accent],
+    colors: [Color(0xFF33FF33), Color(0xFF00FF00)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -35,26 +40,32 @@ class AppColors {
   static LinearGradient cardGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Colors.white.withOpacity(0.1), Colors.white.withOpacity(0.05)],
+    colors: [
+      Color(0xFF00FF00).withOpacity(0.05),
+      Color(0xFF00CC00).withOpacity(0.02),
+    ],
   );
 
   static LinearGradient glassmorphicGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.08)],
+    colors: [
+      Color(0xFF00FF00).withOpacity(0.1),
+      Color(0xFF00CC00).withOpacity(0.05),
+    ],
   );
-  
-  // Glow effects
+
+  // CRT Glow effects - Phosphor bloom
   static BoxShadow primaryGlow = BoxShadow(
-    color: primary.withOpacity(0.5),
-    blurRadius: 30,
-    spreadRadius: 0,
+    color: Color(0xFF00FF00).withOpacity(0.6),
+    blurRadius: 40,
+    spreadRadius: 2,
   );
-  
+
   static BoxShadow accentGlow = BoxShadow(
-    color: accent.withOpacity(0.4),
-    blurRadius: 25,
-    spreadRadius: 0,
+    color: Color(0xFF00FF00).withOpacity(0.5),
+    blurRadius: 30,
+    spreadRadius: 1,
   );
 }
 
@@ -66,10 +77,11 @@ class AppSizes {
   static const double tabletPadding = 56.0;
   static const double desktopPadding = 80.0;
 
-  static const double borderRadiusSmall = 12.0;
-  static const double borderRadiusMedium = 16.0;
-  static const double borderRadiusLarge = 20.0;
-  static const double borderRadiusXLarge = 24.0;
+  // Sharp 90s edges - no rounded corners!
+  static const double borderRadiusSmall = 0.0;
+  static const double borderRadiusMedium = 0.0;
+  static const double borderRadiusLarge = 0.0;
+  static const double borderRadiusXLarge = 0.0;
 }
 
 class AppAnimations {

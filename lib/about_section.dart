@@ -84,8 +84,8 @@ class _AboutSectionState extends State<AboutSection>
           : CrossAxisAlignment.start,
       children: [
         Text(
-          'MEET',
-          style: GoogleFonts.inter(
+          r'C:\USER> TYPE ABOUT.TXT',
+          style: GoogleFonts.courierPrime(
             fontSize: Responsive.fontSize(
               context,
               mobile: 14,
@@ -93,43 +93,43 @@ class _AboutSectionState extends State<AboutSection>
               desktop: 18,
             ),
             color: AppColors.primary,
-            letterSpacing: 4,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ShaderMask(
-          shaderCallback: (bounds) =>
-              AppColors.primaryGradient.createShader(bounds),
-          child: Text(
-            'HAN MIN THANT',
-            style: GoogleFonts.abrilFatface(
-              fontSize: Responsive.fontSize(
-                context,
-                mobile: 48,
-                tablet: 72,
-                desktop: 96,
-              ),
-              color: Colors.white,
-              height: 1.0,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
-            textAlign: isMobile ? TextAlign.center : TextAlign.start,
+            letterSpacing: 0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          'Mobile App Developer',
-          style: GoogleFonts.inter(
+          'HAN MIN THANT',
+          style: GoogleFonts.courierPrime(
             fontSize: Responsive.fontSize(
               context,
-              mobile: 20,
-              tablet: 24,
-              desktop: 28,
+              mobile: 24,
+              tablet: 36,
+              desktop: 48,
             ),
-            color: Colors.white.withOpacity(0.9),
-            fontWeight: FontWeight.w300,
+            color: AppColors.primary,
+            height: 1.2,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 4,
+            shadows: [
+              Shadow(color: AppColors.primary.withOpacity(0.8), blurRadius: 25),
+              Shadow(color: AppColors.primary, blurRadius: 10),
+            ],
+          ),
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          '>>> MOBILE APPLICATION DEVELOPER',
+          style: GoogleFonts.courierPrime(
+            fontSize: Responsive.fontSize(
+              context,
+              mobile: 14,
+              tablet: 18,
+              desktop: 22,
+            ),
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.bold,
             letterSpacing: 1,
           ),
         ),
@@ -141,31 +141,38 @@ class _AboutSectionState extends State<AboutSection>
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        gradient: AppColors.cardGradient,
+        color: AppColors.cardBackground.withOpacity(0.5),
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: AppColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Text(
-        '''I'm a recent Computer Science graduate with First Class Honours from Coventry University. Currently honing my coding skills at 42 Singapore, I'm passionate about mobile app development.
+        '''REM ==========================================
+REM ABOUT.TXT - SYSTEM INFORMATION
+REM ==========================================
 
-I specialize in Swift and Flutter for cross-platform applications, with strong backend capabilities in Python. My focus is on creating intuitive, accessible mobile experiences that solve real-world problems.''',
-        style: GoogleFonts.inter(
+I'm a recent Computer Science graduate with First Class Honours from Coventry University. Currently honing my coding skills at 42 Singapore, I'm passionate about mobile app development.
+
+SPECIALIZATION: Swift and Flutter for cross-platform applications, with strong backend capabilities in Python. My focus is on creating intuitive, accessible mobile experiences that solve real-world problems.
+
+STATUS: READY FOR DEPLOYMENT
+REM ==========================================''',
+        style: GoogleFonts.courierPrime(
           fontSize: Responsive.fontSize(
             context,
-            mobile: 16,
-            tablet: 17,
-            desktop: 18,
+            mobile: 13,
+            tablet: 14,
+            desktop: 15,
           ),
-          color: Colors.white.withOpacity(0.85),
-          height: 1.8,
-          letterSpacing: 0.3,
+          color: AppColors.textSecondary,
+          height: 1.6,
+          letterSpacing: 0,
         ),
       ),
     );
@@ -215,25 +222,18 @@ I specialize in Swift and Flutter for cross-platform applications, with strong b
               ? MainAxisAlignment.center
               : MainAxisAlignment.start,
           children: [
-            Container(
-              width: 4,
-              height: 32,
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(width: 16),
             Text(
-              'Technical Stack',
-              style: GoogleFonts.abrilFatface(
+              r'C:\> DIR SKILLS.*',
+              style: GoogleFonts.courierPrime(
                 fontSize: Responsive.fontSize(
                   context,
-                  mobile: 28,
-                  tablet: 32,
-                  desktop: 36,
+                  mobile: 18,
+                  tablet: 22,
+                  desktop: 26,
                 ),
-                color: Colors.white,
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0,
               ),
             ),
           ],
