@@ -170,7 +170,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                                 tablet: 18,
                                 desktop: 20,
                               ),
-                              color: AppColors.primaryCyan,
+                              color: AppColors.primary,
                               fontWeight: FontWeight.w400,
                               letterSpacing: 0.5,
                             ),
@@ -341,7 +341,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryCyan.withOpacity(0.3),
+              color: AppColors.primary.withOpacity(0.4),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),

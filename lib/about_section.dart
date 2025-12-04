@@ -92,7 +92,7 @@ class _AboutSectionState extends State<AboutSection>
               tablet: 16,
               desktop: 18,
             ),
-            color: AppColors.primaryCyan,
+            color: AppColors.primary,
             letterSpacing: 4,
             fontWeight: FontWeight.w600,
           ),

@@ -109,7 +109,7 @@ class ProjectsSection extends StatelessWidget {
         subtitle: 'Navigation App For Visually Impaired',
         imagePath: 'assets/images/ppth.png',
         gradient: const LinearGradient(
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFF8B5CF6), Color(0xFF6366F1)],
         ),
         isTablet: isTablet,
       ),
@@ -118,7 +118,7 @@ class ProjectsSection extends StatelessWidget {
         subtitle: 'Restaurant Reservation App',
         imagePath: 'assets/images/res.png',
         gradient: const LinearGradient(
-          colors: [Color(0xFFf093fb), Color(0xFFf5576c)],
+          colors: [Color(0xFFEC4899), Color(0xFFF43F5E)],
         ),
         isTablet: isTablet,
       ),
@@ -127,7 +127,7 @@ class ProjectsSection extends StatelessWidget {
         subtitle: 'Ray Tracing with C',
         imagePath: 'assets/images/minirt.png',
         gradient: const LinearGradient(
-          colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
+          colors: [Color(0xFF3B82F6), Color(0xFF06B6D4)],
         ),
         isTablet: isTablet,
       ),
@@ -136,7 +136,7 @@ class ProjectsSection extends StatelessWidget {
         subtitle: 'Fitness Running App',
         imagePath: 'assets/images/r.png',
         gradient: const LinearGradient(
-          colors: [Color(0xFF43e97b), Color(0xFF38f9d7)],
+          colors: [Color(0xFF10B981), Color(0xFF059669)],
         ),
         isTablet: isTablet,
       ),
@@ -145,7 +145,7 @@ class ProjectsSection extends StatelessWidget {
         subtitle: 'A WebServer',
         imagePath: 'assets/images/webserv.png',
         gradient: const LinearGradient(
-          colors: [Color(0xFFfa709a), Color(0xFFfee140)],
+          colors: [Color(0xFFF59E0B), Color(0xFFEF4444)],
         ),
         isTablet: isTablet,
       ),
@@ -212,15 +212,22 @@ class _ProjectCardState extends State<ProjectCard> {
               gradient: AppColors.cardGradient,
               borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
               border: Border.all(
-                color: Colors.white.withOpacity(_isHovered ? 0.3 : 0.1),
+                color: _isHovered 
+                    ? AppColors.primary.withOpacity(0.5)
+                    : Colors.white.withOpacity(0.1),
                 width: 1.5,
               ),
               boxShadow: _isHovered
                   ? [
                       BoxShadow(
-                        color: Colors.white.withOpacity(0.2),
+                        color: AppColors.primary.withOpacity(0.3),
                         blurRadius: 30,
                         offset: const Offset(0, 15),
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
                       ),
                     ]
                   : [

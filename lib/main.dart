@@ -15,10 +15,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Han - Mobile Developer',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
         useMaterial3: true,
-        scaffoldBackgroundColor: Colors.black,
-        textTheme: GoogleFonts.interTextTheme(),
+        scaffoldBackgroundColor: const Color(0xFF0F0F0F),
+        textTheme: GoogleFonts.interTextTheme(
+          Theme.of(context).textTheme.apply(
+            bodyColor: Colors.white,
+            displayColor: Colors.white,
+          ),
+        ),
+        colorScheme: ColorScheme.dark(
+          primary: const Color(0xFF8B5CF6),
+          secondary: const Color(0xFF3B82F6),
+          surface: const Color(0xFF1A1A1A),
+          background: const Color(0xFF0F0F0F),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Animated background
+          // Animated background with gradient
           AnimatedContainer(
             duration: AppAnimations.slow,
             decoration: BoxDecoration(
@@ -63,7 +63,11 @@ class _HomePageState extends State<HomePage> {
                     ? Alignment.center
                     : Alignment.bottomLeft,
                 radius: 1.5,
-                colors: [Colors.grey.shade900.withOpacity(0.3), Colors.black],
+                colors: [
+                  AppColors.primary.withOpacity(0.15),
+                  AppColors.secondary.withOpacity(0.08),
+                  AppColors.darkBackground,
+                ],
               ),
             ),
           ),
@@ -111,20 +115,30 @@ class _HomePageState extends State<HomePage> {
       height: isMobile ? 70 : 80,
       padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
+        color: AppColors.darkerBackground.withOpacity(0.8),
         border: Border(
-          bottom: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+          bottom: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 1),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          // Logo
-          Text(
-            'HAN',
-            style: GoogleFonts.abrilFatface(
-              fontSize: isMobile ? 24 : 28,
-              color: Colors.white,
-              letterSpacing: 3,
+          // Logo with gradient
+          ShaderMask(
+            shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
+            child: Text(
+              'HAN',
+              style: GoogleFonts.abrilFatface(
+                fontSize: isMobile ? 24 : 28,
+                color: Colors.white,
+                letterSpacing: 3,
+              ),
             ),
           ),
           const Spacer(),
@@ -158,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                   : 'CONTACT',
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: AppColors.primaryCyan,
+                color: AppColors.primary,
                 letterSpacing: 2,
                 fontWeight: FontWeight.w600,
               ),
@@ -172,13 +186,13 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 65,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.9),
+        color: AppColors.darkerBackground.withOpacity(0.95),
         border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+          top: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 1),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: AppColors.primary.withOpacity(0.15),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -248,12 +262,12 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isActive
-                      ? AppColors.primaryCyan
+                      ? AppColors.primary
                       : Colors.white.withOpacity(0.3),
                   boxShadow: isActive
                       ? [
                           BoxShadow(
-                            color: AppColors.primaryCyan.withOpacity(0.6),
+                            color: AppColors.primary.withOpacity(0.6),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -302,7 +316,7 @@ class _MobileNavItem extends StatelessWidget {
                 isActive ? activeIcon : icon,
                 key: ValueKey(isActive),
                 color: isActive
-                    ? AppColors.primaryCyan
+                    ? AppColors.primary
                     : Colors.white.withOpacity(0.5),
                 size: 26,
               ),
@@ -313,7 +327,7 @@ class _MobileNavItem extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 11,
                 color: isActive
-                    ? AppColors.primaryCyan
+                    ? AppColors.primary
                     : Colors.white.withOpacity(0.5),
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                 letterSpacing: 0.5,

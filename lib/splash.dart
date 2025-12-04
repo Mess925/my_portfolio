@@ -16,7 +16,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   static const _duration = Duration(seconds: 5);
   static const _bg = Color(0xFF0D1117);
-  static const _accent = Color(0xFF00E5FF);
+  static const _accent = Color(0xFF8B5CF6);  // Purple accent
+  static const _secondAccent = Color(0xFF3B82F6);  // Blue accent
   static const _text = Colors.white;
 
   @override
@@ -92,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ShaderMask(
                         shaderCallback: (bounds) {
                           return LinearGradient(
-                            colors: [_accent, Colors.white, _accent],
+                            colors: [_accent, _secondAccent, _accent],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ).createShader(bounds);
@@ -199,8 +200,10 @@ class _OrbitPainter extends CustomPainter {
       paint.color = Colors.white.withOpacity(alpha * 0.4);
       canvas.drawCircle(Offset(x, y), 2.5 + math.sin(i + t * 4) * 1.2, paint);
 
-      // Neon trailing effect
-      paint.color = const Color(0xFF00E5FF).withOpacity(alpha * 0.6);
+      // Neon trailing effect with new accent colors
+      final hue = (i / count) * 360;
+      final particleColor = i.isEven ? const Color(0xFF8B5CF6) : const Color(0xFF3B82F6);
+      paint.color = particleColor.withOpacity(alpha * 0.6);
       canvas.drawCircle(Offset(x, y), 1.2, paint);
     }
   }

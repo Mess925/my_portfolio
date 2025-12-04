@@ -2,14 +2,32 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const primaryCyan = Color(0xFF00BCD4);
-  static const darkCyan = Color(0xFF0097A7);
-  static const accentOrange = Color(0xFFFF6F00);
-  static const darkBackground = Color(0xFF1A1A1A);
-  static const darkerBackground = Color(0xFF0D0D0D);
-
+  // Primary colors - Vibrant purple/blue palette
+  static const primary = Color(0xFF8B5CF6);  // Purple
+  static const primaryLight = Color(0xFFA78BFA);  // Light purple
+  static const primaryDark = Color(0xFF7C3AED);  // Dark purple
+  static const secondary = Color(0xFF3B82F6);  // Blue
+  static const accent = Color(0xFFEC4899);  // Pink accent
+  
+  // Background colors
+  static const darkBackground = Color(0xFF0F0F0F);  // Almost black
+  static const darkerBackground = Color(0xFF050505);  // Pure black
+  static const cardBackground = Color(0xFF1A1A1A);  // Dark gray
+  
+  // Text colors
+  static const textPrimary = Color(0xFFFFFFFF);
+  static const textSecondary = Color(0xFFE5E5E5);
+  static const textMuted = Color(0xFF9CA3AF);
+  
+  // Gradient combinations
   static const primaryGradient = LinearGradient(
-    colors: [primaryCyan, darkCyan],
+    colors: [primary, secondary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const accentGradient = LinearGradient(
+    colors: [primary, accent],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -17,13 +35,26 @@ class AppColors {
   static LinearGradient cardGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Colors.white.withOpacity(0.08), Colors.white.withOpacity(0.03)],
+    colors: [Colors.white.withOpacity(0.1), Colors.white.withOpacity(0.05)],
   );
 
   static LinearGradient glassmorphicGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.05)],
+    colors: [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.08)],
+  );
+  
+  // Glow effects
+  static BoxShadow primaryGlow = BoxShadow(
+    color: primary.withOpacity(0.5),
+    blurRadius: 30,
+    spreadRadius: 0,
+  );
+  
+  static BoxShadow accentGlow = BoxShadow(
+    color: accent.withOpacity(0.4),
+    blurRadius: 25,
+    spreadRadius: 0,
   );
 }
 
