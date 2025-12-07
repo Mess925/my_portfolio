@@ -90,6 +90,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              // Mobile bottom navigation bar
+              if (Responsive.isMobile(context)) _buildMobileBottomNav(),
             ],
           ),
         ],
@@ -177,6 +179,85 @@ class _HomePageState extends State<HomePage> {
           // Mobile: removed page name
           if (isMobile) const SizedBox(width: 16),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMobileBottomNav() {
+    return Container(
+      height: 65,
+      decoration: BoxDecoration(
+        color: AppColors.darkerBackground.withOpacity(0.95),
+        border: Border(
+          top: BorderSide(color: AppColors.primary.withOpacity(0.3), width: 2),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _MobileNavItem(
+            icon: Icons.folder_open,
+            label: 'PROJECTS',
+            onTap: () => _scrollToSection(_projectsKey),
+          ),
+          _MobileNavItem(
+            icon: Icons.person_outline,
+            label: 'ABOUT',
+            onTap: () => _scrollToSection(_aboutKey),
+          ),
+          _MobileNavItem(
+            icon: Icons.email_outlined,
+            label: 'CONTACT',
+            onTap: () => _scrollToSection(_contactKey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MobileNavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _MobileNavItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: AppColors.primary, size: 26),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.courierPrime(
+                fontSize: 10,
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
