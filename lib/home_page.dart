@@ -14,35 +14,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  bool _isNavigating = false;
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _projectsKey = GlobalKey();
+  final GlobalKey _aboutKey = GlobalKey();
+  final GlobalKey _contactKey = GlobalKey();
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  void _navigateToPage(int page) {
-    if (_isNavigating || _currentPage == page) return;
-
-    setState(() {
-      _isNavigating = true;
-      _currentPage = page;
-    });
-
-    _pageController
-        .animateToPage(
-          page,
-          duration: AppAnimations.slow,
-          curve: AppAnimations.defaultCurve,
-        )
-        .then((_) {
-          if (mounted) {
-            setState(() => _isNavigating = false);
-          }
-        });
+  void _scrollToSection(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: AppAnimations.slow,
+        curve: AppAnimations.defaultCurve,
+      );
+    }
   }
 
   @override
@@ -52,30 +43,27 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Terminal-style background
+          // Background
           Container(
             decoration: const BoxDecoration(color: AppColors.darkBackground),
           ),
 
-          // Subtle scanline effect
+          // Subtle effects
           Positioned.fill(child: CustomPaint(painter: _TerminalGridPainter())),
 
-          // Animated green glow
-          AnimatedContainer(
-            duration: AppAnimations.slow,
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: _currentPage == 0
-                    ? Alignment.topRight
-                    : _currentPage == 1
-                    ? Alignment.center
-                    : Alignment.bottomLeft,
-                radius: 1.5,
-                colors: [
-                  AppColors.primary.withOpacity(0.08),
-                  AppColors.secondary.withOpacity(0.04),
-                  Colors.transparent,
-                ],
+          // Animated glow
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topCenter,
+                  radius: 1.5,
+                  colors: [
+                    AppColors.primary.withOpacity(0.08),
+                    AppColors.secondary.withOpacity(0.04),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
           ),
@@ -85,32 +73,25 @@ class _HomePageState extends State<HomePage> {
             children: [
               _buildAppBar(context),
               Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  scrollDirection: Axis.vertical,
-                  // Disable PageView scrolling on mobile to avoid conflict with content scrolling
-                  physics: isMobile
-                      ? const AlwaysScrollableScrollPhysics()
-                      : const AlwaysScrollableScrollPhysics(),
-                  onPageChanged: (page) {
-                    if (mounted) {
-                      setState(() => _currentPage = page);
-                    }
-                  },
-                  children: const [
-                    ProjectsSection(),
-                    AboutSection(),
-                    ContactSection(),
-                  ],
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    children: [
+                      Container(
+                        key: _projectsKey,
+                        child: const ProjectsSection(),
+                      ),
+                      Container(key: _aboutKey, child: const AboutSection()),
+                      Container(
+                        key: _contactKey,
+                        child: const ContactSection(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              // Mobile bottom navigation bar
-              if (isMobile) _buildMobileBottomNav(),
             ],
           ),
-
-          // Page indicators (Desktop only)
-          if (Responsive.isDesktop(context)) _buildPageIndicators(),
         ],
       ),
     );
@@ -140,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Row(
         children: [
-          // Terminal prompt style logo
+          // Logo
           Text(
             isMobile ? 'C:\\MESS_T>' : 'C:\\PORTFOLIO\\MESS_T>',
             style: GoogleFonts.courierPrime(
@@ -178,199 +159,30 @@ class _HomePageState extends State<HomePage> {
           if (!isMobile) ...[
             _NavButton(
               label: 'PROJECTS',
-              isActive: _currentPage == 0,
-              onPressed: () => _navigateToPage(0),
+              isActive: false,
+              onPressed: () => _scrollToSection(_projectsKey),
             ),
             _NavButton(
               label: 'ABOUT',
-              isActive: _currentPage == 1,
-              onPressed: () => _navigateToPage(1),
+              isActive: false,
+              onPressed: () => _scrollToSection(_aboutKey),
             ),
             _NavButton(
               label: 'CONTACT',
-              isActive: _currentPage == 2,
-              onPressed: () => _navigateToPage(2),
+              isActive: false,
+              onPressed: () => _scrollToSection(_contactKey),
             ),
           ],
 
-          // Mobile: just show current page name
-          if (isMobile)
-            Text(
-              _currentPage == 0
-                  ? '[PROJECTS.EXE]'
-                  : _currentPage == 1
-                  ? '[ABOUT.EXE]'
-                  : '[CONTACT.EXE]',
-              style: GoogleFonts.courierPrime(
-                fontSize: 12,
-                color: AppColors.primary,
-                letterSpacing: 0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          // Mobile: removed page name
+          if (isMobile) const SizedBox(width: 16),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMobileBottomNav() {
-    return Container(
-      height: 65,
-      decoration: BoxDecoration(
-        color: AppColors.darkerBackground.withOpacity(0.95),
-        border: Border(
-          top: BorderSide(color: AppColors.primary.withOpacity(0.3), width: 2),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _MobileNavItem(
-            icon: Icons.folder_open,
-            activeIcon: Icons.folder,
-            label: 'PROJECTS',
-            isActive: _currentPage == 0,
-            onTap: () => _navigateToPage(0),
-          ),
-          _MobileNavItem(
-            icon: Icons.info_outline,
-            activeIcon: Icons.info,
-            label: 'ABOUT',
-            isActive: _currentPage == 1,
-            onTap: () => _navigateToPage(1),
-          ),
-          _MobileNavItem(
-            icon: Icons.email_outlined,
-            activeIcon: Icons.email,
-            label: 'CONTACT',
-            isActive: _currentPage == 2,
-            onTap: () => _navigateToPage(2),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // PopupMenuItem<int> _buildMenuItem(String label, int value) {
-  //   return PopupMenuItem<int>(
-  //     value: value,
-  //     child: Text(
-  //       label,
-  //       style: GoogleFonts.inter(
-  //         color: _currentPage == value ? AppColors.primaryCyan : Colors.white,
-  //         fontWeight: _currentPage == value ? FontWeight.w600 : FontWeight.w400,
-  //         letterSpacing: 1.5,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _buildPageIndicators() {
-    return Positioned(
-      right: 40,
-      top: 0,
-      bottom: 0,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(3, (index) {
-            final isActive = _currentPage == index;
-            return GestureDetector(
-              onTap: () => _navigateToPage(index),
-              child: AnimatedContainer(
-                duration: AppAnimations.normal,
-                curve: AppAnimations.defaultCurve,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                width: isActive ? 12 : 8,
-                height: isActive ? 12 : 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isActive
-                      ? AppColors.primary
-                      : Colors.white.withOpacity(0.3),
-                  boxShadow: isActive
-                      ? [
-                          BoxShadow(
-                            color: AppColors.primary.withOpacity(0.6),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : [],
-                ),
-              ),
-            );
-          }),
-        ),
       ),
     );
   }
 }
 
-class _MobileNavItem extends StatelessWidget {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _MobileNavItem({
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: AppAnimations.fast,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedSwitcher(
-              duration: AppAnimations.fast,
-              child: Icon(
-                isActive ? activeIcon : icon,
-                key: ValueKey(isActive),
-                color: isActive
-                    ? AppColors.primary
-                    : Colors.white.withOpacity(0.5),
-                size: 26,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: GoogleFonts.courierPrime(
-                fontSize: 10,
-                color: isActive
-                    ? AppColors.primary
-                    : AppColors.primary.withOpacity(0.5),
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                letterSpacing: 0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
+// Navigation button widget
 class _NavButton extends StatefulWidget {
   final String label;
   final bool isActive;

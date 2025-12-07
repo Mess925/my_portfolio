@@ -46,11 +46,9 @@ class ProjectsSection extends StatelessWidget {
           SizedBox(height: isMobile ? 24 : 40),
 
           // Projects List
-          Expanded(
-            child: isMobile
-                ? _buildMobileProjects(context)
-                : _buildDesktopTabletProjects(context, isTablet),
-          ),
+          isMobile
+              ? _buildMobileProjects(context)
+              : _buildDesktopTabletProjects(context, isTablet),
         ],
       ),
     );
@@ -59,29 +57,27 @@ class ProjectsSection extends StatelessWidget {
   Widget _buildMobileProjects(BuildContext context) {
     final projects = _getProjects(false);
 
-    return ListView.builder(
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 24),
-          child: projects[index],
-        );
-      },
+    return Column(
+      children: [
+        for (int i = 0; i < projects.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: projects[i],
+          ),
+      ],
     );
   }
 
   Widget _buildDesktopTabletProjects(BuildContext context, bool isTablet) {
     final projects = _getProjects(isTablet);
 
-    return ScrollConfiguration(
-      behavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {...PointerDeviceKind.values},
-      ),
-      child: ListView(
+    return SizedBox(
+      height: 520, // Fixed height for horizontal scroll
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.only(bottom: 20),
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Row(
             children: [
               for (int i = 0; i < projects.length; i++) ...[
                 projects[i],
@@ -89,8 +85,7 @@ class ProjectsSection extends StatelessWidget {
               ],
             ],
           ),
-          const SizedBox(width: 40),
-        ],
+        ),
       ),
     );
   }
