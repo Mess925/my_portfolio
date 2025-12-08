@@ -73,17 +73,27 @@ class ProjectsSection extends StatelessWidget {
 
     return SizedBox(
       height: 520, // Fixed height for horizontal scroll
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Row(
-            children: [
-              for (int i = 0; i < projects.length; i++) ...[
-                projects[i],
-                if (i < projects.length - 1) const SizedBox(width: 30),
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+          },
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 20, right: 40),
+            child: Row(
+              children: [
+                for (int i = 0; i < projects.length; i++) ...[
+                  projects[i],
+                  if (i < projects.length - 1) const SizedBox(width: 30),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -305,7 +315,8 @@ class _ProjectCardState extends State<ProjectCard> {
                             child: Image.asset(
                               widget.imagePath,
                               width: double.infinity,
-                              fit: BoxFit.cover,
+                              height: double.infinity,
+                              fit: isMobile ? BoxFit.contain : BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return _buildPlaceholder();
                               },

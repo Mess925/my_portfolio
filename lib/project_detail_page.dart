@@ -7,6 +7,8 @@ class ProjectDetails {
   final String overview;
   final List<String> keyFeatures;
   final String technologies;
+  final List<String> images; // Project screenshots
+  final List<String>? videoUrls; // Optional video URLs
   final String? ctaButtonText;
   final VoidCallback? onCtaPressed;
 
@@ -14,6 +16,8 @@ class ProjectDetails {
     required this.overview,
     required this.keyFeatures,
     required this.technologies,
+    this.images = const [],
+    this.videoUrls,
     this.ctaButtonText,
     this.onCtaPressed,
   });
@@ -203,6 +207,15 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
                           ),
 
                           SizedBox(height: isMobile ? 40 : 60),
+
+                          // Media Gallery (Images & Videos)
+                          if (widget.details.images.isNotEmpty ||
+                              (widget.details.videoUrls?.isNotEmpty ?? false))
+                            _buildMediaGallery(context),
+
+                          if (widget.details.images.isNotEmpty ||
+                              (widget.details.videoUrls?.isNotEmpty ?? false))
+                            SizedBox(height: isMobile ? 40 : 60),
 
                           // Divider
                           Container(
@@ -468,6 +481,256 @@ class _ProjectDetailPageState extends State<ProjectDetailPage>
       ),
     );
   }
+
+  Widget _buildMediaGallery(BuildContext context) {
+    final hasVideos = widget.details.videoUrls?.isNotEmpty ?? false;
+    final hasImages = widget.details.images.isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.primary, width: 2),
+            color: AppColors.primary.withOpacity(0.1),
+          ),
+          child: Text(
+            '>>> MEDIA SHOWCASE',
+            style: GoogleFonts.courierPrime(
+              fontSize: Responsive.fontSize(
+                context,
+                mobile: 16,
+                tablet: 18,
+                desktop: 20,
+              ),
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // Videos Section
+        if (hasVideos) ...[
+          Text(
+            'DEMO VIDEOS:',
+            style: GoogleFonts.courierPrime(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildVideoGrid(context),
+          const SizedBox(height: 32),
+        ],
+
+        // Images Section
+        if (hasImages) ...[
+          Text(
+            'SCREENSHOTS:',
+            style: GoogleFonts.courierPrime(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildImageGrid(context),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildVideoGrid(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+    final videos = widget.details.videoUrls ?? [];
+
+    if (isMobile) {
+      return Column(
+        children: videos
+            .map(
+              (url) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: _buildVideoPlaceholder(url),
+              ),
+            )
+            .toList(),
+      );
+    }
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: videos
+          .map(
+            (url) => SizedBox(
+              width: (MediaQuery.of(context).size.width - 200) / 2,
+              child: _buildVideoPlaceholder(url),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildVideoPlaceholder(String url) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 2),
+        color: Colors.black,
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.play_circle_outline,
+                  size: 48,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'VIDEO DEMO',
+                  style: GoogleFonts.courierPrime(
+                    fontSize: 12,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    url,
+                    style: GoogleFonts.courierPrime(
+                      fontSize: 10,
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 8,
+            left: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              color: AppColors.primary,
+              child: Text(
+                '[ VIDEO ]',
+                style: GoogleFonts.courierPrime(
+                  fontSize: 10,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageGrid(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+    final images = widget.details.images;
+
+    if (isMobile) {
+      return Column(
+        children: images
+            .map(
+              (imagePath) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: _buildImageItem(imagePath),
+              ),
+            )
+            .toList(),
+      );
+    }
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: images
+          .map(
+            (imagePath) => SizedBox(
+              width: (MediaQuery.of(context).size.width - 200) / 3,
+              child: _buildImageItem(imagePath),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildImageItem(String imagePath) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.primary.withOpacity(0.5), width: 2),
+      ),
+      child: Stack(
+        children: [
+          Image.asset(
+            imagePath,
+            width: double.infinity,
+            height: 200,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 200,
+                color: Colors.black,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.image_outlined,
+                        size: 48,
+                        color: AppColors.primary.withOpacity(0.5),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'IMAGE NOT FOUND',
+                        style: GoogleFonts.courierPrime(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          Positioned(
+            top: 8,
+            left: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              color: AppColors.primary.withOpacity(0.9),
+              child: Text(
+                '[ IMG ]',
+                style: GoogleFonts.courierPrime(
+                  fontSize: 10,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 // Project Details Data
@@ -488,6 +751,12 @@ ProjectDetails getProjectDetails(String title) {
         ],
         technologies:
             'Swift • Google Maps API • TensorFlow Lite • Text-to-Speech',
+        images: [
+          'assets/images/protective1.png',
+          'assets/images/protective2.png',
+          'assets/images/protective3.png',
+        ],
+        videoUrls: ['https://youtu.be/demo-video-1'],
         ctaButtonText: 'View Project',
       );
 
