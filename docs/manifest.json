@@ -1,11 +1,11 @@
 {
-    "name": "portfolio",
-    "short_name": "portfolio",
+    "name": "Han Min Thant - Developer Portfolio",
+    "short_name": "Han Portfolio",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#000000",
+    "theme_color": "#00FF00",
+    "description": "Mobile Developer Portfolio - Han Min Thant",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
