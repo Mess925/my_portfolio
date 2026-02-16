@@ -56,6 +56,12 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.all(80.0), child: Text("Welcome to my portfolio! I'm a passionate developer with experience in Flutter, Dart, and various other technologies. I enjoy creating beautiful and functional applications that provide great user experiences. Feel free to explore my projects and contact me for any inquiries!"));
+    return Padding(
+      padding: EdgeInsets.all(80.0),
+      child: Row(children: [
+        Text('Hello There! I am a software developer with a passion for creating innovative solutions. I have experience in various programming languages and frameworks, and I enjoy working on projects that challenge me to learn and grow. In my free time, I like to explore new technologies and contribute to open-source projects.'),
+      ],
+    ),
+    );
   }
 }
