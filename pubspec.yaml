@@ -68,6 +68,8 @@ flutter:
     - assets/images/ppth.png
     - assets/images/res.png
     - assets/images/r.png
+    - assets/images/pfb.png
+    - assets/images/pfw.png
     - assets/images/run.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
