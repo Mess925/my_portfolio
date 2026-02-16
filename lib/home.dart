@@ -27,8 +27,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final TabController _tabController;
   final ScrollController _scrollController = ScrollController();
 
-  final List<GlobalKey> _sectionKeys =
-      List.generate(_tabs.length, (_) => GlobalKey());
+  final List<GlobalKey> _sectionKeys = List.generate(
+    _tabs.length,
+    (_) => GlobalKey(),
+  );
 
   bool _isProgrammaticScroll = false;
 
@@ -77,7 +79,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _syncTabWithScroll() {
     if (_isProgrammaticScroll) return;
 
-    // choose section whose top is closest to below the appbar
     final topTarget = kToolbarHeight + MediaQuery.of(context).padding.top;
 
     int bestIndex = 0;
@@ -110,13 +111,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final viewportHeight = media.size.height;
     final safeTop = media.padding.top;
 
-    // Height available under the AppBar, so each section has a bounded height.
     final sectionHeight = viewportHeight - (kToolbarHeight + safeTop);
 
     return Scaffold(
       appBar: _buildAppBar(context),
       body: SafeArea(
-        top: false, // appbar already handles top area
+        top: false,
         child: CustomScrollView(
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
@@ -153,20 +153,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final cs = Theme.of(context).colorScheme;
 
     return AppBar(
-      elevation: 0,
-      scrolledUnderElevation: 1,
-      titleSpacing: 0,
       title: TabBar(
         controller: _tabController,
         dividerColor: Colors.transparent,
         indicator: BoxDecoration(
-          color: cs.primary.withOpacity(0.10),
+          color: cs.primary.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         labelPadding: const EdgeInsets.symmetric(horizontal: 16),
         splashBorderRadius: BorderRadius.circular(8),
-        overlayColor: WidgetStateProperty.all(cs.primary.withOpacity(0.05)),
+        overlayColor: WidgetStateProperty.all(
+          cs.primary.withValues(alpha: 0.05),
+        ),
         isScrollable: true,
         tabAlignment: TabAlignment.start,
         tabs: _tabs.map((t) => Tab(text: t)).toList(),
@@ -188,19 +187,11 @@ class _SectionSized extends StatelessWidget {
   final double height;
   final Widget child;
 
-  const _SectionSized({
-    super.key,
-    required this.height,
-    required this.child,
-  });
+  const _SectionSized({super.key, required this.height, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    // Bounded height so LayoutBuilder inside AboutPage gets a real maxHeight.
-    return SizedBox(
-      height: height,
-      child: child,
-    );
+    return SizedBox(height: height, child: child);
   }
 }
 
@@ -208,10 +199,7 @@ class _ThemeToggleButton extends StatefulWidget {
   final ThemeMode themeMode;
   final VoidCallback onToggle;
 
-  const _ThemeToggleButton({
-    required this.themeMode,
-    required this.onToggle,
-  });
+  const _ThemeToggleButton({required this.themeMode, required this.onToggle});
 
   @override
   State<_ThemeToggleButton> createState() => _ThemeToggleButtonState();

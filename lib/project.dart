@@ -5,8 +5,23 @@ class ProjectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Welcome to the Project Page!")),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+            ),
+            child: Column(
+              children: [
+                const Text('About Me'),
+                const SizedBox(height: 16),
+                const Text('This is the about section.'),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
