@@ -6,7 +6,6 @@ class ContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Contact Page"), centerTitle: true),
       body: Center(child: Text("Welcome to the Contact Page!")),
     );
   }
