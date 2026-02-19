@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.2.1 
+  google_fonts: ^8.0.2 
   font_awesome_flutter: ^10.7.0 # Use the latest version
   url_launcher: ^6.2.1  # Add this line
 
