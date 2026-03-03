@@ -34,36 +34,25 @@ class AboutPage extends StatelessWidget {
                           Text(
                             "Han",
                             style: TextStyle(
-                              fontSize: 72,
+                              fontSize: 92,
+                              letterSpacing: 2.5,
                               fontWeight: FontWeight.bold,
                               height: 1.0,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                           Text(
                             "Min Thant",
                             style: TextStyle(
-                              fontSize: 72,
+                              fontSize: 92,
+                              letterSpacing: 2.5,
                               fontWeight: FontWeight.bold,
                               height: 1.0,
+                              fontStyle: FontStyle.italic
                             ),
                           ),
                           const SizedBox(height: 20),
                         ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: AspectRatio(
-                          aspectRatio: 3 / 4,
-                          child: Image.asset(
-                            'assets/images/pf.jpeg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
                       ),
                     ),
                   ),

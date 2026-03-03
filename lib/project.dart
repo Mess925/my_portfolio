@@ -5,23 +5,229 @@ class ProjectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
+    final cs = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('About Me'),
-                const SizedBox(height: 16),
-                const Text('This is the about section.'),
+                Text(
+                  "Projects",
+                  style: TextStyle(
+                    fontSize: 44,
+                    fontWeight: FontWeight.w800,
+                    color: cs.primary,
+                    height: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "A few things I’ve built.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: cs.onSurface.withValues(alpha: 0.7),
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                GridView.count(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  shrinkWrap: true,
+                  children: const [
+                    _ProjectCard(
+                      title: "Little Lemon",
+                      description:
+                          "Flutter web portfolio with smooth sections and theme toggle.",
+                      tags: ["Flutter", "Web", "UI"],
+                    ),
+                    _ProjectCard(
+                      title: "miniRT",
+                      description:
+                          "A small ray tracer with lighting, normals, and reflections.",
+                      tags: ["C", "Math", "Graphics"],
+                    ),
+                    _ProjectCard(
+                      title: "Protective Path",
+                      description:
+                          "Threading + mutexes with strict timing constraints.",
+                      tags: ["C", "Threads", "Mutex"],
+                    ),
+                    _ProjectCard(
+                      title: "MiniShell",
+                      description:
+                          "Parsing and executing commands with pipes and semicolons.",
+                      tags: ["C", "Parsing", "Unix"],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: FilledButton(
+                    onPressed: () {},
+                    style: FilledButton.styleFrom(
+                      backgroundColor: cs.primary,
+                      foregroundColor: cs.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 14,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Text("More on my GitHub"),
+                        SizedBox(width: 8),
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+}
+
+class _ProjectCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final List<String> tags;
+
+  const _ProjectCard({
+    required this.title,
+    required this.description,
+    required this.tags,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.6)),
+        color: cs.surface,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Tiny header row: "type" dot + title
+          Row(
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: cs.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.4,
+              color: cs.onSurface.withValues(alpha: 0.75),
+            ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 14),
+
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: tags
+                .map(
+                  (t) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: cs.primary.withValues(alpha: 0.35),
+                      ),
+                      color: cs.primary.withValues(alpha: 0.08),
+                    ),
+                    child: Text(
+                      t,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: cs.primary,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+
+          const Spacer(),
+
+          Row(
+            children: [
+              OutlinedButton(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: cs.primary.withValues(alpha: 0.6)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: const Text("Details"),
+              ),
+              const SizedBox(width: 10),
+              FilledButton(
+                onPressed: () {},
+                style: FilledButton.styleFrom(
+                  backgroundColor: cs.primary,
+                  foregroundColor: cs.onPrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: const Text("GitHub"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
