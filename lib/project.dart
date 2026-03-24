@@ -6,40 +6,59 @@ class ProjectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
+    int crossAxisCount;
+    double aspectRatio;
+    double horizontalPadding;
+    double titleSize;
+
+    if (screenWidth < 600) {
+      crossAxisCount = 1;
+      aspectRatio = 1.3;
+      horizontalPadding = 16;
+      titleSize = 28;
+    } else if (screenWidth < 1000) {
+      crossAxisCount = 2;
+      aspectRatio = 1.0;
+      horizontalPadding = 24;
+      titleSize = 36;
+    } else {
+      crossAxisCount = 4;
+      aspectRatio = 0.85;
+      horizontalPadding = 40;
+      titleSize = 44;
+    }
 
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: 60,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Projects",
                   style: TextStyle(
-                    fontSize: 44,
+                    fontSize: titleSize,
                     fontWeight: FontWeight.w800,
                     color: cs.primary,
                     height: 1.1,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  "A few things I’ve built.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: cs.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
                 const SizedBox(height: 40),
-
                 GridView.count(
-                  crossAxisCount: 4,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   shrinkWrap: true,
+                  childAspectRatio: aspectRatio,
                   children: const [
                     _ProjectCard(
                       title: "Little Lemon",
@@ -67,7 +86,7 @@ class ProjectPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 40),
                 Center(
                   child: FilledButton(
                     onPressed: () {},
@@ -82,14 +101,12 @@ class ProjectPage extends StatelessWidget {
                         vertical: 14,
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Text("More on my GitHub"),
                         SizedBox(width: 8),
-                        Icon(
-                          Icons.arrow_forward_ios_sharp,
-                        ),
+                        Icon(Icons.arrow_forward_ios_sharp, size: 16),
                       ],
                     ),
                   ),
@@ -128,7 +145,6 @@ class _ProjectCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tiny header row: "type" dot + title
           Row(
             children: [
               Container(
@@ -155,7 +171,6 @@ class _ProjectCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-
           Text(
             description,
             style: TextStyle(
@@ -167,7 +182,6 @@ class _ProjectCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 14),
-
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -197,32 +211,34 @@ class _ProjectCard extends StatelessWidget {
                 )
                 .toList(),
           ),
-
-          const Spacer(),
-
+          const SizedBox(height: 16),
           Row(
             children: [
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: cs.primary.withValues(alpha: 0.6)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: cs.primary.withValues(alpha: 0.6)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
+                  child: const Text("Details"),
                 ),
-                child: const Text("Details"),
               ),
               const SizedBox(width: 10),
-              FilledButton(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                  backgroundColor: cs.primary,
-                  foregroundColor: cs.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () {},
+                  style: FilledButton.styleFrom(
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
+                  child: const Text("GitHub"),
                 ),
-                child: const Text("GitHub"),
               ),
             ],
           ),
