@@ -5,23 +5,22 @@ class ContactPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Contact Me',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
-            child: Column(
-              children: [
-                const Text('About Me'),
-                const SizedBox(height: 16),
-                const Text('This is the about section.'),
-              ],
-            ),
-          ),
-        );
-      },
+            SizedBox(height: 16),
+            Text('This is the contact section.'),
+          ],
+        ),
+      ),
     );
   }
 }

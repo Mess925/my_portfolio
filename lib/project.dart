@@ -30,89 +30,87 @@ class ProjectPage extends StatelessWidget {
       titleSize = 44;
     }
 
-    return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: 60,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Projects",
-                  style: TextStyle(
-                    fontSize: titleSize,
-                    fontWeight: FontWeight.w800,
-                    color: cs.primary,
-                    height: 1.1,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding,
+            vertical: 60,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Projects",
+                style: TextStyle(
+                  fontSize: titleSize,
+                  fontWeight: FontWeight.w800,
+                  color: cs.primary,
+                  height: 1.1,
+                ),
+              ),
+              const SizedBox(height: 40),
+              GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                shrinkWrap: true,
+                childAspectRatio: aspectRatio,
+                children: const [
+                  _ProjectCard(
+                    title: "Little Lemon",
+                    description:
+                        "Flutter web portfolio with smooth sections and theme toggle.",
+                    tags: ["Flutter", "Web", "UI"],
                   ),
-                ),
-                const SizedBox(height: 40),
-                GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  shrinkWrap: true,
-                  childAspectRatio: aspectRatio,
-                  children: const [
-                    _ProjectCard(
-                      title: "Little Lemon",
-                      description:
-                          "Flutter web portfolio with smooth sections and theme toggle.",
-                      tags: ["Flutter", "Web", "UI"],
+                  _ProjectCard(
+                    title: "miniRT",
+                    description:
+                        "A small ray tracer with lighting, normals, and reflections.",
+                    tags: ["C", "Math", "Graphics"],
+                  ),
+                  _ProjectCard(
+                    title: "Protective Path",
+                    description:
+                        "Threading + mutexes with strict timing constraints.",
+                    tags: ["C", "Threads", "Mutex"],
+                  ),
+                  _ProjectCard(
+                    title: "MiniShell",
+                    description:
+                        "Parsing and executing commands with pipes and semicolons.",
+                    tags: ["C", "Parsing", "Unix"],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: FilledButton(
+                  onPressed: () {},
+                  style: FilledButton.styleFrom(
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    _ProjectCard(
-                      title: "miniRT",
-                      description:
-                          "A small ray tracer with lighting, normals, and reflections.",
-                      tags: ["C", "Math", "Graphics"],
-                    ),
-                    _ProjectCard(
-                      title: "Protective Path",
-                      description:
-                          "Threading + mutexes with strict timing constraints.",
-                      tags: ["C", "Threads", "Mutex"],
-                    ),
-                    _ProjectCard(
-                      title: "MiniShell",
-                      description:
-                          "Parsing and executing commands with pipes and semicolons.",
-                      tags: ["C", "Parsing", "Unix"],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                Center(
-                  child: FilledButton(
-                    onPressed: () {},
-                    style: FilledButton.styleFrom(
-                      backgroundColor: cs.primary,
-                      foregroundColor: cs.onPrimary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("More on my GitHub"),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_ios_sharp, size: 16),
-                      ],
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
                     ),
                   ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("More on my GitHub"),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_ios_sharp, size: 16),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -139,7 +137,7 @@ class _ProjectCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: cs.outline.withValues(alpha: 0.6)),
+        border: Border.all(color: cs.outline.withOpacity(0.6)),
         color: cs.surface,
       ),
       child: Column(
@@ -176,7 +174,7 @@ class _ProjectCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               height: 1.4,
-              color: cs.onSurface.withValues(alpha: 0.75),
+              color: cs.onSurface.withOpacity(0.75),
             ),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
@@ -194,10 +192,8 @@ class _ProjectCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(999),
-                      border: Border.all(
-                        color: cs.primary.withValues(alpha: 0.35),
-                      ),
-                      color: cs.primary.withValues(alpha: 0.08),
+                      border: Border.all(color: cs.primary.withOpacity(0.35)),
+                      color: cs.primary.withOpacity(0.08),
                     ),
                     child: Text(
                       t,
@@ -218,7 +214,7 @@ class _ProjectCard extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: cs.primary.withValues(alpha: 0.6)),
+                    side: BorderSide(color: cs.primary.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),

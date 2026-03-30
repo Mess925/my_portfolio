@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -22,41 +23,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  static const _tabs = <String>["About", "Projects", "Contact"];
-
   late final TabController _tabController;
-  final ScrollController _scrollController = ScrollController();
-
-  final List<GlobalKey> _sectionKeys = List.generate(
-    _tabs.length,
-    (_) => GlobalKey(),
-  );
+  late final ScrollController _scrollController;
+  late final List<GlobalKey> _sectionKeys;
 
   bool _isProgrammaticScroll = false;
+
+  final List<_SectionItem> _sections = const [
+    _SectionItem(
+      title: 'About',
+      icon: Icons.person_outline,
+      selectedIcon: Icons.person,
+      child: AboutPage(),
+    ),
+    _SectionItem(
+      title: 'Projects',
+      icon: Icons.work_outline,
+      selectedIcon: Icons.work,
+      child: ProjectPage(),
+    ),
+    _SectionItem(
+      title: 'Contact',
+      icon: Icons.mail_outline,
+      selectedIcon: Icons.mail,
+      child: ContactPage(),
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(length: _sections.length, vsync: this);
+    _scrollController = ScrollController();
+    _sectionKeys = List.generate(_sections.length, (_) => GlobalKey());
 
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        _scrollToSection(_tabController.index);
-      }
-    });
-
+    _tabController.addListener(_handleTabChange);
     _scrollController.addListener(_syncTabWithScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _syncTabWithScroll();
+      if (mounted) _syncTabWithScroll();
     });
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange);
+    _scrollController.removeListener(_syncTabWithScroll);
     _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  bool _isNarrow(BuildContext context) =>
+      MediaQuery.of(context).size.width < 600;
+
+  void _handleTabChange() {
+    if (_tabController.indexIsChanging) {
+      _scrollToSection(_tabController.index);
+    }
   }
 
   Future<void> _scrollToSection(int index) async {
@@ -67,112 +91,149 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     await Scrollable.ensureVisible(
       ctx,
-      duration: const Duration(milliseconds: 520),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
-      alignment: 0.0,
+      alignment: 0,
     );
 
+    if (!mounted) return;
+
     await Future.delayed(const Duration(milliseconds: 80));
-    _isProgrammaticScroll = false;
+    if (mounted) {
+      _isProgrammaticScroll = false;
+    }
   }
 
   void _syncTabWithScroll() {
-    if (_isProgrammaticScroll) return;
+    if (_isProgrammaticScroll || !mounted) return;
 
-    final topTarget = kToolbarHeight + MediaQuery.of(context).padding.top;
+    final media = MediaQuery.of(context);
+    final topTarget = kToolbarHeight + media.padding.top;
 
-    int bestIndex = 0;
-    double bestDist = double.infinity;
+    int closestIndex = 0;
+    double closestDistance = double.infinity;
 
     for (int i = 0; i < _sectionKeys.length; i++) {
       final ctx = _sectionKeys[i].currentContext;
       if (ctx == null) continue;
 
-      final box = ctx.findRenderObject() as RenderBox?;
-      if (box == null || !box.hasSize) continue;
+      final renderObject = ctx.findRenderObject();
+      if (renderObject is! RenderBox || !renderObject.hasSize) continue;
 
-      final dy = box.localToGlobal(Offset.zero).dy;
-      final dist = (dy - topTarget).abs();
+      final dy = renderObject.localToGlobal(Offset.zero).dy;
+      final distance = (dy - topTarget).abs();
 
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIndex = i;
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = i;
       }
     }
 
-    if (_tabController.index != bestIndex) {
-      _tabController.animateTo(bestIndex);
+    if (_tabController.index != closestIndex) {
+      _tabController.animateTo(closestIndex);
     }
+  }
+
+  ScrollPhysics _platformScrollPhysics() {
+    try {
+      if (Platform.isIOS || Platform.isMacOS) {
+        return const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        );
+      }
+    } catch (_) {
+      // Platform checks can fail on web
+    }
+
+    return const ClampingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
+    final narrow = _isNarrow(context);
+
     final viewportHeight = media.size.height;
     final safeTop = media.padding.top;
+    final safeBottom = media.padding.bottom;
+    final keyboardHeight = media.viewInsets.bottom;
 
-    final sectionHeight = viewportHeight - (kToolbarHeight + safeTop);
+    final sectionMinHeight =
+        viewportHeight - kToolbarHeight - safeTop - keyboardHeight;
 
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context, narrow: narrow),
+      bottomNavigationBar: narrow ? _buildBottomNav() : null,
       body: SafeArea(
         top: false,
+        bottom: true,
         child: CustomScrollView(
           controller: _scrollController,
-          physics: const BouncingScrollPhysics(),
+          physics: _platformScrollPhysics(),
           slivers: [
-            SliverToBoxAdapter(
-              child: _SectionSized(
-                key: _sectionKeys[0],
-                height: sectionHeight,
-                child: const AboutPage(),
+            for (int i = 0; i < _sections.length; i++)
+              SliverToBoxAdapter(
+                child: _SectionSized(
+                  key: _sectionKeys[i],
+                  minHeight: sectionMinHeight < 320 ? 320 : sectionMinHeight,
+                  child: _sections[i].child,
+                ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: _SectionSized(
-                key: _sectionKeys[1],
-                height: sectionHeight,
-                child: const ProjectPage(),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: _SectionSized(
-                key: _sectionKeys[2],
-                height: sectionHeight,
-                child: const ContactPage(),
-              ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            SliverToBoxAdapter(child: SizedBox(height: safeBottom + 24)),
           ],
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context, {
+    required bool narrow,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    if (narrow) {
+      return AppBar(
+        title: AnimatedBuilder(
+          animation: _tabController,
+          builder: (_, __) {
+            return Text(
+              _sections[_tabController.index].title,
+              style: theme.textTheme.titleMedium,
+            );
+          },
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: _ThemeToggleButton(
+              themeMode: widget.themeMode,
+              onToggle: widget.toggleTheme,
+            ),
+          ),
+        ],
+      );
+    }
 
     return AppBar(
       title: TabBar(
         controller: _tabController,
         dividerColor: Colors.transparent,
         indicator: BoxDecoration(
-          color: cs.primary.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8),
+          color: colorScheme.primary.withOpacity(0.16),
+          borderRadius: BorderRadius.circular(10),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-        splashBorderRadius: BorderRadius.circular(8),
-        overlayColor: WidgetStateProperty.all(
-          cs.primary.withValues(alpha: 0.05),
+        splashBorderRadius: BorderRadius.circular(10),
+        overlayColor: WidgetStatePropertyAll(
+          colorScheme.primary.withOpacity(0.06),
         ),
-        isScrollable: true,
-        tabAlignment: TabAlignment.start,
-        tabs: _tabs.map((t) => Tab(text: t)).toList(),
+        tabs: [for (final section in _sections) Tab(text: section.title)],
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.only(right: 12),
           child: _ThemeToggleButton(
             themeMode: widget.themeMode,
             onToggle: widget.toggleTheme,
@@ -181,17 +242,62 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ],
     );
   }
+
+  Widget _buildBottomNav() {
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (_, __) {
+        return NavigationBar(
+          selectedIndex: _tabController.index,
+          onDestinationSelected: (index) {
+            _tabController.animateTo(index);
+          },
+          height: 68,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: [
+            for (final section in _sections)
+              NavigationDestination(
+                icon: Icon(section.icon),
+                selectedIcon: Icon(section.selectedIcon),
+                label: section.title,
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SectionItem {
+  final String title;
+  final IconData icon;
+  final IconData selectedIcon;
+  final Widget child;
+
+  const _SectionItem({
+    required this.title,
+    required this.icon,
+    required this.selectedIcon,
+    required this.child,
+  });
 }
 
 class _SectionSized extends StatelessWidget {
-  final double height;
+  final double minHeight;
   final Widget child;
 
-  const _SectionSized({super.key, required this.height, required this.child});
+  const _SectionSized({
+    super.key,
+    required this.minHeight,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: height, child: child);
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: minHeight),
+      child: child,
+    );
   }
 }
 
@@ -208,7 +314,7 @@ class _ThemeToggleButton extends StatefulWidget {
 class _ThemeToggleButtonState extends State<_ThemeToggleButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _animation;
+  late final Animation<double> _rotation;
 
   @override
   void initState() {
@@ -217,7 +323,7 @@ class _ThemeToggleButtonState extends State<_ThemeToggleButton>
       duration: const Duration(milliseconds: 280),
       vsync: this,
     );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _rotation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
   }
 
   @override
@@ -226,9 +332,9 @@ class _ThemeToggleButtonState extends State<_ThemeToggleButton>
     super.dispose();
   }
 
-  void _handleToggle() {
-    _controller.forward(from: 0);
+  void _toggle() {
     HapticFeedback.lightImpact();
+    _controller.forward(from: 0);
     widget.onToggle();
   }
 
@@ -237,14 +343,16 @@ class _ThemeToggleButtonState extends State<_ThemeToggleButton>
     final isDark = widget.themeMode == ThemeMode.dark;
 
     return IconButton(
-      onPressed: _handleToggle,
+      onPressed: _toggle,
       tooltip: isDark ? 'Switch to light mode' : 'Switch to dark mode',
       icon: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
+        animation: _rotation,
+        builder: (_, __) {
           return Transform.rotate(
-            angle: _animation.value * math.pi,
-            child: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+            angle: _rotation.value * math.pi,
+            child: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+            ),
           );
         },
       ),
