@@ -16,7 +16,7 @@ class AboutPage extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 400),
         child: Align(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

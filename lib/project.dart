@@ -3,31 +3,52 @@ import 'package:flutter/material.dart';
 class ProjectPage extends StatelessWidget {
   const ProjectPage({super.key});
 
+  static const List<ProjectItem> _projects = [
+    ProjectItem(
+      title: 'Little Lemon',
+      description:
+          'Flutter web portfolio with smooth sections and theme toggle.',
+      tags: ['Flutter', 'Web', 'UI'],
+    ),
+    ProjectItem(
+      title: 'miniRT',
+      description:
+          'A small ray tracer with lighting, normals, and reflections.',
+      tags: ['C', 'Math', 'Graphics'],
+    ),
+    ProjectItem(
+      title: 'Protective Path',
+      description: 'Threading + mutexes with strict timing constraints.',
+      tags: ['C', 'Threads', 'Mutex'],
+    ),
+    ProjectItem(
+      title: 'MiniShell',
+      description: 'Parsing and executing commands with pipes and semicolons.',
+      tags: ['C', 'Parsing', 'Unix'],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
-    int crossAxisCount;
-    double aspectRatio;
     double horizontalPadding;
     double titleSize;
+    double cardWidth;
 
     if (screenWidth < 600) {
-      crossAxisCount = 1;
-      aspectRatio = 1.3;
       horizontalPadding = 16;
       titleSize = 28;
+      cardWidth = screenWidth - (horizontalPadding * 2);
     } else if (screenWidth < 1000) {
-      crossAxisCount = 2;
-      aspectRatio = 1.0;
       horizontalPadding = 24;
       titleSize = 36;
+      cardWidth = (screenWidth - (horizontalPadding * 2) - 20) / 2;
     } else {
-      crossAxisCount = 4;
-      aspectRatio = 0.85;
       horizontalPadding = 40;
       titleSize = 44;
+      cardWidth = 340;
     }
 
     return Center(
@@ -42,7 +63,7 @@ class ProjectPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Projects",
+                'Projects',
                 style: TextStyle(
                   fontSize: titleSize,
                   fontWeight: FontWeight.w800,
@@ -51,39 +72,17 @@ class ProjectPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                shrinkWrap: true,
-                childAspectRatio: aspectRatio,
-                children: const [
-                  _ProjectCard(
-                    title: "Little Lemon",
-                    description:
-                        "Flutter web portfolio with smooth sections and theme toggle.",
-                    tags: ["Flutter", "Web", "UI"],
-                  ),
-                  _ProjectCard(
-                    title: "miniRT",
-                    description:
-                        "A small ray tracer with lighting, normals, and reflections.",
-                    tags: ["C", "Math", "Graphics"],
-                  ),
-                  _ProjectCard(
-                    title: "Protective Path",
-                    description:
-                        "Threading + mutexes with strict timing constraints.",
-                    tags: ["C", "Threads", "Mutex"],
-                  ),
-                  _ProjectCard(
-                    title: "MiniShell",
-                    description:
-                        "Parsing and executing commands with pipes and semicolons.",
-                    tags: ["C", "Parsing", "Unix"],
-                  ),
-                ],
+              Wrap(
+                spacing: 20,
+                runSpacing: 20,
+                children: _projects
+                    .map(
+                      (project) => SizedBox(
+                        width: cardWidth.clamp(260.0, 360.0),
+                        child: ProjectCard(project: project),
+                      ),
+                    )
+                    .toList(),
               ),
               const SizedBox(height: 40),
               Center(
@@ -103,7 +102,7 @@ class ProjectPage extends StatelessWidget {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("More on my GitHub"),
+                      Text('More on my GitHub'),
                       SizedBox(width: 8),
                       Icon(Icons.arrow_forward_ios_sharp, size: 16),
                     ],
@@ -118,16 +117,22 @@ class ProjectPage extends StatelessWidget {
   }
 }
 
-class _ProjectCard extends StatelessWidget {
+class ProjectItem {
   final String title;
   final String description;
   final List<String> tags;
 
-  const _ProjectCard({
+  const ProjectItem({
     required this.title,
     required this.description,
     required this.tags,
   });
+}
+
+class ProjectCard extends StatelessWidget {
+  final ProjectItem project;
+
+  const ProjectCard({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +142,11 @@ class _ProjectCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: cs.outline.withOpacity(0.6)),
+        border: Border.all(color: cs.outline.withOpacity(0.35)),
         color: cs.surface,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -156,7 +162,7 @@ class _ProjectCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  title,
+                  project.title,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
@@ -170,20 +176,18 @@ class _ProjectCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            description,
+            project.description,
             style: TextStyle(
               fontSize: 14,
               height: 1.4,
               color: cs.onSurface.withOpacity(0.75),
             ),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 14),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: tags
+            children: project.tags
                 .map(
                   (t) => Container(
                     padding: const EdgeInsets.symmetric(
@@ -218,8 +222,9 @@ class _ProjectCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text("Details"),
+                  child: const Text('Details'),
                 ),
               ),
               const SizedBox(width: 10),
@@ -232,8 +237,9 @@ class _ProjectCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text("GitHub"),
+                  child: const Text('GitHub'),
                 ),
               ),
             ],

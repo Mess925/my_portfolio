@@ -247,21 +247,54 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return AnimatedBuilder(
       animation: _tabController,
       builder: (_, __) {
-        return NavigationBar(
-          selectedIndex: _tabController.index,
-          onDestinationSelected: (index) {
-            _tabController.animateTo(index);
-          },
-          height: 68,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: [
-            for (final section in _sections)
-              NavigationDestination(
-                icon: Icon(section.icon),
-                selectedIcon: Icon(section.selectedIcon),
-                label: section.title,
-              ),
-          ],
+        final theme = Theme.of(context);
+        final cs = theme.colorScheme;
+        final isDark = theme.brightness == Brightness.dark;
+
+        return NavigationBarTheme(
+          data: NavigationBarThemeData(
+            backgroundColor: cs.surface,
+            indicatorColor: isDark
+                ? cs.primary.withOpacity(0.22)
+                : cs.primary.withOpacity(0.12),
+            iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
+              final selected = states.contains(WidgetState.selected);
+              return IconThemeData(
+                size: 24,
+                color: selected
+                    ? cs.primary
+                    : cs.onSurface.withOpacity(isDark ? 0.72 : 0.65),
+              );
+            }),
+            labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((
+              states,
+            ) {
+              final selected = states.contains(WidgetState.selected);
+              return TextStyle(
+                fontSize: 12,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected
+                    ? cs.primary
+                    : cs.onSurface.withOpacity(isDark ? 0.72 : 0.65),
+              );
+            }),
+          ),
+          child: NavigationBar(
+            selectedIndex: _tabController.index,
+            onDestinationSelected: (index) {
+              _tabController.animateTo(index);
+            },
+            height: 68,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            destinations: [
+              for (final section in _sections)
+                NavigationDestination(
+                  icon: Icon(section.icon),
+                  selectedIcon: Icon(section.selectedIcon),
+                  label: section.title,
+                ),
+            ],
+          ),
         );
       },
     );
@@ -339,12 +372,16 @@ class _ThemeToggleButtonState extends State<_ThemeToggleButton>
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final isDark = widget.themeMode == ThemeMode.dark;
 
     return IconButton(
       onPressed: _toggle,
       tooltip: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+      color: cs.onSurface,
       icon: AnimatedBuilder(
         animation: _rotation,
         builder: (_, __) {
@@ -352,6 +389,7 @@ class _ThemeToggleButtonState extends State<_ThemeToggleButton>
             angle: _rotation.value * math.pi,
             child: Icon(
               isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: cs.onSurface,
             ),
           );
         },
