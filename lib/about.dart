@@ -21,7 +21,7 @@ class HeroHeader extends StatelessWidget {
         Text(
           'Han Min Thant',
           style: textTheme.displayLarge?.copyWith(
-            fontSize: isMobile ? 36 : 48,
+            fontSize: isMobile ? 40 : 56,
           ),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -76,7 +76,10 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final palette = theme.extension<AppPalette>()!;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,16 +94,23 @@ class SkillsSection extends StatelessWidget {
                 (skill) => Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.sm,
-                    vertical: 6,
+                    vertical: 7,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.border),
-                    borderRadius: BorderRadius.circular(3),
+                    color: isDark ? palette.surface : palette.background,
+                    border: Border.all(color: palette.border),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                    boxShadow: isDark
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: palette.shadow,
+                              blurRadius: 6,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
                   ),
-                  child: Text(
-                    skill,
-                    style: textTheme.labelMedium,
-                  ),
+                  child: Text(skill, style: textTheme.labelMedium),
                 ),
               )
               .toList(),

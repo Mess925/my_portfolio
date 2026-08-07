@@ -110,25 +110,50 @@ class _ProjectRowState extends State<_ProjectRow> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final palette = theme.extension<AppPalette>()!;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final restingBg = isDark ? palette.surface : palette.background;
+    final hoveredBg = isDark
+        ? Color.alphaBlend(palette.accent.withOpacity(0.06), palette.surface)
+        : Color.alphaBlend(
+            palette.accent.withOpacity(0.03),
+            palette.background,
+          );
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        transform: Matrix4.translationValues(0, _hovered ? -3 : 0, 0),
         decoration: BoxDecoration(
+          color: _hovered ? hoveredBg : restingBg,
           border: Border.all(
-            color: _hovered ? AppColors.accent : AppColors.border,
+            color: _hovered ? palette.accent : palette.border,
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          boxShadow: isDark
+              ? null
+              : [
+                  BoxShadow(
+                    color: _hovered
+                        ? palette.accent.withOpacity(0.14)
+                        : palette.shadow,
+                    blurRadius: _hovered ? 20 : 8,
+                    offset: Offset(0, _hovered ? 8 : 2),
+                  ),
+                ],
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: _open,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(

@@ -73,17 +73,23 @@ class _TextLinkState extends State<_TextLink> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: Text(
-          widget.text,
-          style: widget.style?.copyWith(
-            color: _hovered ? AppColors.accentDark : AppColors.accent,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          style: (widget.style ?? const TextStyle()).copyWith(
+            color: _hovered ? palette.accentHover : palette.accent,
+            decoration: _hovered ? TextDecoration.underline : TextDecoration.none,
+            decorationColor: palette.accentHover,
           ),
+          child: Text(widget.text),
         ),
       ),
     );
