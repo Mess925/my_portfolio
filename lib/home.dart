@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'about.dart';
+import 'experience.dart';
 import 'project.dart';
 import 'contact.dart';
 
@@ -37,9 +38,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: AboutPage(),
     ),
     _SectionItem(
+      title: 'Experience',
+      icon: Icons.work_history_outlined,
+      selectedIcon: Icons.work_history,
+      child: ExperiencePage(),
+    ),
+    _SectionItem(
       title: 'Projects',
-      icon: Icons.work_outline,
-      selectedIcon: Icons.work,
+      icon: Icons.code_outlined,
+      selectedIcon: Icons.code,
       child: ProjectPage(),
     ),
     _SectionItem(

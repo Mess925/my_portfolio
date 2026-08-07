@@ -6,6 +6,13 @@ class ProjectPage extends StatelessWidget {
 
   static const List<ProjectItem> _projects = [
     ProjectItem(
+      title: 'Thales SmartCard SDK',
+      description:
+          'Cross-platform Flutter app for Thales smartcard interaction deployed on Android and iOS. Features demographic data, PIN management, certificate viewer, document signing with RSA/ECC encryption, and biometric verification — all via APDU commands. Built the internal SDK for future developers and implemented native layers in C.',
+      tags: ['Flutter', 'Dart', 'Android', 'iOS', 'C', 'APDU', 'SDK'],
+      githubUrl: 'https://github.com/Mess925',
+    ),
+    ProjectItem(
       title: 'Third Eye',
       description:
           'An AI-powered fact-checker that classifies news as true or false, provides related articles, and helps users make informed decisions.',
