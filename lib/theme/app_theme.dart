@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Single source of truth for the portfolio's color palette.
-///
-/// One accent (a refined blue) drives primary/interactive color everywhere —
-/// badges, tab indicators, links, hover states, and card accents all pull
-/// from `colorScheme.primary` instead of hardcoding their own blue inline.
+/// Palette matching the reference design (`hthant-portfolio.dc.html`), which
+/// specifies colors in OKLCH. Flutter's `Color` has no OKLCH support, and
+/// pulling in a conversion package isn't worth it for a fixed palette, so
+/// these are the OKLCH values converted to sRGB hex by hand:
+///   background   oklch(0.985 0.004 250) -> #F8FAFD
+///   ink          oklch(0.18  0.012 250) -> #0E1217
+///   accent       oklch(0.55  0.16  30)  -> #BD4334
+///   accentDark   oklch(0.45  0.18  30)  -> #A3391F
+///   border       oklch(0.9   0.005 250) -> #E3E4E8
+/// The gray text ladder (oklch L .28/.35/.4/.45/.5/.55, ~0 chroma) converts
+/// to a near-neutral charcoal ramp.
 class AppColors {
   AppColors._();
 
-  static const accent = Color(0xFF3D7AFF);
-
-  static const darkBackground = Color(0xFF0B0D10);
-  static const darkSurface = Color(0xFF14171B);
-  static const darkOutline = Color(0xFF262A31);
-
-  static const lightBackground = Color(0xFFFAFAFA);
-  static const lightSurface = Color(0xFFFFFFFF);
-  static const lightOutline = Color(0xFFE6E7EA);
+  static const background = Color(0xFFF8FAFD);
+  static const ink = Color(0xFF0E1217);
+  static const inkParagraph = Color(0xFF292929); // L .28
+  static const inkBody = Color(0xFF3A3D45); // L .35
+  static const inkMuted = Color(0xFF4A4D56); // L .4
+  static const inkFaint = Color(0xFF54575F); // L .45
+  static const inkDate = Color(0xFF60636B); // L .5
+  static const inkTag = Color(0xFF6C6F78); // L .55
+  static const border = Color(0xFFE3E4E8);
+  static const accent = Color(0xFFBD4334);
+  static const accentDark = Color(0xFFA3391F);
 }
 
-/// Builds the light/dark [ThemeData] for the app, including a shared
-/// [TextTheme] (Sora for display/headings, Inter for body, JetBrains Mono
-/// for badges/tags/meta — reinforcing the minimal dev/terminal aesthetic).
+/// Single light theme (the reference design has no dark mode). Space
+/// Grotesk for display/body text, IBM Plex Mono for the uppercase eyebrow
+/// labels, tags, and dates/stack meta.
 class AppTheme {
   AppTheme._();
 
@@ -33,84 +41,58 @@ class AppTheme {
     ).copyWith(
       primary: AppColors.accent,
       onPrimary: Colors.white,
-      surface: AppColors.lightBackground,
-      onSurface: const Color(0xFF15181C),
-      surfaceContainerLowest: AppColors.lightSurface,
-      surfaceContainerHighest: AppColors.lightSurface,
-      outlineVariant: AppColors.lightOutline,
+      surface: AppColors.background,
+      onSurface: AppColors.ink,
+      outlineVariant: AppColors.border,
     );
 
-    return _base(colorScheme, AppColors.lightBackground);
-  }
-
-  static ThemeData dark() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.accent,
-      brightness: Brightness.dark,
-    ).copyWith(
-      primary: AppColors.accent,
-      onPrimary: Colors.white,
-      surface: AppColors.darkBackground,
-      onSurface: const Color(0xFFE7E9EC),
-      surfaceContainerLowest: AppColors.darkSurface,
-      surfaceContainerHighest: AppColors.darkSurface,
-      outlineVariant: AppColors.darkOutline,
-    );
-
-    return _base(colorScheme, AppColors.darkBackground);
-  }
-
-  static ThemeData _base(ColorScheme colorScheme, Color background) {
     return ThemeData(
-      brightness: colorScheme.brightness,
+      brightness: Brightness.light,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: background,
-      textTheme: _textTheme(colorScheme.onSurface),
-      appBarTheme: AppBarTheme(
-        backgroundColor: background,
+      scaffoldBackgroundColor: AppColors.background,
+      textTheme: _textTheme(),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        scrolledUnderElevation: 0,
-        shadowColor: Colors.transparent,
       ),
     );
   }
 
-  static TextTheme _textTheme(Color onSurface) {
-    final display = GoogleFonts.sora(
-      fontWeight: FontWeight.w800,
-      color: onSurface,
-      height: 1.05,
-      letterSpacing: -1.5,
+  static TextTheme _textTheme() {
+    final display = GoogleFonts.spaceGrotesk(
+      fontWeight: FontWeight.w600,
+      color: AppColors.ink,
+      letterSpacing: -0.96,
+      height: 1.15,
     );
-    final heading = GoogleFonts.sora(
-      fontWeight: FontWeight.w700,
-      color: onSurface,
-      letterSpacing: -0.3,
+    final body = GoogleFonts.spaceGrotesk(
+      fontWeight: FontWeight.w400,
+      color: AppColors.inkBody,
+      height: 1.6,
     );
-    final body = GoogleFonts.inter(color: onSurface, height: 1.6);
-    final mono = GoogleFonts.jetBrainsMono(color: onSurface);
+    final title = GoogleFonts.spaceGrotesk(
+      fontWeight: FontWeight.w600,
+      color: AppColors.ink,
+      height: 1.3,
+    );
+    final mono = GoogleFonts.ibmPlexMono(color: AppColors.inkDate);
 
     return TextTheme(
-      displayLarge: display.copyWith(fontSize: 92),
-      headlineLarge: display.copyWith(fontSize: 48, letterSpacing: -1.5),
-      titleLarge: heading.copyWith(fontSize: 20),
-      titleMedium: heading.copyWith(fontSize: 17),
-      titleSmall: heading.copyWith(fontSize: 15),
-      bodyLarge: body.copyWith(fontSize: 16),
-      bodyMedium: body.copyWith(fontSize: 14, height: 1.6),
-      bodySmall: body.copyWith(fontSize: 13),
+      displayLarge: display.copyWith(fontSize: 48),
+      titleMedium: title.copyWith(fontSize: 17),
+      titleSmall: title.copyWith(fontSize: 15),
+      bodyLarge: body.copyWith(fontSize: 19, color: AppColors.inkMuted),
+      bodyMedium: body.copyWith(fontSize: 17, color: AppColors.inkParagraph),
+      bodySmall: body.copyWith(fontSize: 15, color: AppColors.inkBody),
       labelLarge: mono.copyWith(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.8,
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.65,
+        color: AppColors.accent,
       ),
-      labelMedium: mono.copyWith(
-        fontSize: 11.5,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.2,
-      ),
-      labelSmall: mono.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
+      labelMedium: mono.copyWith(fontSize: 13, color: AppColors.inkTag),
+      labelSmall: mono.copyWith(fontSize: 12, color: AppColors.inkTag),
     );
   }
 }

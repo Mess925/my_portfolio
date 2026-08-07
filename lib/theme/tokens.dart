@@ -9,6 +9,9 @@ class AppSpacing {
   static const double xl = 32;
   static const double xxl = 48;
   static const double xxxl = 56;
+
+  /// Vertical gap between top-level sections in the single-scroll layout.
+  static const double section = 88;
 }
 
 class AppRadius {
