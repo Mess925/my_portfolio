@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,3 +39,17 @@ jobs:
         with:
           name: flutter-web
           path: build/web
+
+      - name: Deploy build to docs/ (GitHub Pages)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          rsync -av --delete --exclude='CNAME' build/web/ docs/
+          if [ -n "$(git status --porcelain docs)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add docs
+            git commit -m "Deploy: update docs/ from Flutter web build [skip ci]"
+            git push
+          else
+            echo "No changes to deploy"
+          fi
