@@ -73,7 +73,7 @@ class _SocialButton extends StatefulWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final String tooltip;
   final VoidCallback onTap;
 
@@ -105,7 +105,7 @@ class _SocialButtonState extends State<_SocialButton> {
               color: _hovered ? palette.ink : Colors.transparent,
               border: Border.all(color: palette.ink),
             ),
-            child: Icon(
+            child: FaIcon(
               widget.icon,
               size: 18,
               color: _hovered ? palette.background : palette.ink,
