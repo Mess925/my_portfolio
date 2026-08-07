@@ -18,13 +18,15 @@ class ProjectItem {
     required this.title,
     required this.description,
     required this.tags,
-    required this.githubUrl,
+    this.url,
+    this.inProgress = false,
   });
 
   final String title;
   final String description;
   final List<String> tags;
-  final String githubUrl;
+  final String? url;
+  final bool inProgress;
 }
 
 class ProjectsSection extends StatelessWidget {
@@ -36,49 +38,41 @@ class ProjectsSection extends StatelessWidget {
       description:
           'Cross-platform Flutter app for Thales smartcard interaction deployed on Android and iOS. Features demographic data, PIN management, certificate viewer, document signing with RSA/ECC encryption, and biometric verification — all via APDU commands. Built the internal SDK for future developers and implemented native layers in C.',
       tags: ['Flutter', 'Dart', 'Android', 'iOS', 'C', 'APDU', 'SDK'],
-      githubUrl: 'https://github.com/Mess925',
+      url: 'https://github.com/Mess925',
+    ),
+    ProjectItem(
+      title: 'Pethub',
+      description:
+          'iOS app for pet lovers to organize photos into per-pet rooms, with a Lost & Found board to help reunite missing pets, plus DM and group room chat. Built with Supabase and RevenueCat, released on the App Store.',
+      tags: ['iOS', 'Swift', 'Supabase', 'RevenueCat'],
     ),
     ProjectItem(
       title: 'Third Eye',
       description:
           'An AI-powered fact-checker that classifies news as true or false, provides related articles, and helps users make informed decisions.',
       tags: ['Next.js', 'Python', 'AI', 'Fact-Checking'],
-      githubUrl: 'https://github.com/Th1rd3yE',
+      url: 'https://github.com/Th1rd3yE',
     ),
     ProjectItem(
       title: 'Knoverse',
       description:
           'Collaborative platform enabling teams to interact with AI-driven chat systems using internal documents for enhanced productivity.',
       tags: ['Next.js', 'Python', 'AI', 'Collaboration'],
-      githubUrl: 'https://github.com/thanthtetaung4/Knoverse',
-    ),
-    ProjectItem(
-      title: 'WebServ',
-      description:
-          'A simple multi-service web server built from scratch with Linux and Nginx, designed to handle HTTP requests efficiently.',
-      tags: ['C', 'Linux', 'Nginx', 'Web Server'],
-      githubUrl: 'https://github.com/thanthtetaung4/webserv',
-    ),
-    ProjectItem(
-      title: 'miniRT',
-      description:
-          'A lightweight ray tracer implementing lighting, normals, and reflections for 3D rendering experiments.',
-      tags: ['C', 'Graphics', 'Ray Tracing', 'Math'],
-      githubUrl: 'https://github.com/Mess925/miniRT',
-    ),
-    ProjectItem(
-      title: 'MiniShell',
-      description:
-          'Custom Unix shell supporting pipes, redirection, and built-in commands, designed for systems programming learning.',
-      tags: ['C', 'Unix', 'Shell', 'Parsing'],
-      githubUrl: 'https://github.com/Mess925',
+      url: 'https://github.com/thanthtetaung4/Knoverse',
     ),
     ProjectItem(
       title: 'Protective Path',
       description:
           'iOS application implementing threaded navigation with strict timing constraints and object detection for safety applications.',
       tags: ['iOS', 'Swift', 'Threading', 'Object Detection'],
-      githubUrl: 'https://github.com/Mess925/ProtectivePath',
+      url: 'https://github.com/Mess925/ProtectivePath',
+    ),
+    ProjectItem(
+      title: 'NovalBox',
+      description:
+          'A Letterboxd-style social app for tracking, rating, and reviewing the books you read.',
+      tags: ['iOS', 'Swift'],
+      inProgress: true,
     ),
   ];
 
@@ -133,19 +127,14 @@ class _ProjectRow extends StatefulWidget {
 class _ProjectRowState extends State<_ProjectRow> {
   bool _hovered = false;
 
-  Future<void> _open() async {
-    final Uri uri = Uri.parse(widget.project.githubUrl);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch ${widget.project.githubUrl}';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final palette = theme.extension<AppPalette>()!;
     final isMobile = MediaQuery.sizeOf(context).width < 700;
+    final url = widget.project.url;
+    final interactive = url != null;
 
     final indexLabel = Text(
       widget.index.toString().padLeft(2, '0'),
@@ -155,9 +144,30 @@ class _ProjectRowState extends State<_ProjectRow> {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.project.title,
-          style: textTheme.titleLarge?.copyWith(fontSize: 24),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              widget.project.title,
+              style: textTheme.titleLarge?.copyWith(fontSize: 24),
+            ),
+            if (widget.project.inProgress) ...[
+              const SizedBox(width: AppSpacing.sm),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 3,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: palette.accent),
+                ),
+                child: Text(
+                  'IN PROGRESS',
+                  style: textTheme.labelSmall?.copyWith(color: palette.accent),
+                ),
+              ),
+            ],
+          ],
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(widget.project.description, style: textTheme.bodySmall),
@@ -186,47 +196,53 @@ class _ProjectRowState extends State<_ProjectRow> {
       ],
     );
 
-    final viewMore = Text('View →', style: textTheme.labelLarge);
+    final viewMore = interactive
+        ? Text('View →', style: textTheme.labelLarge)
+        : const SizedBox.shrink();
+
+    final row = Container(
+      decoration: BoxDecoration(
+        color: _hovered ? palette.hoverTint : Colors.transparent,
+        border: widget.isLast
+            ? null
+            : Border(bottom: BorderSide(color: palette.border)),
+      ),
+      child: InkWell(
+        onTap: interactive ? () => _openUrl(url) : null,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: isMobile
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [indexLabel, viewMore],
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    body,
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 48, child: indexLabel),
+                    Expanded(child: body),
+                    const SizedBox(width: AppSpacing.lg),
+                    viewMore,
+                  ],
+                ),
+        ),
+      ),
+    );
+
+    if (!interactive) return row;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _hovered ? palette.hoverTint : Colors.transparent,
-          border: widget.isLast
-              ? null
-              : Border(bottom: BorderSide(color: palette.border)),
-        ),
-        child: InkWell(
-          onTap: _open,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: isMobile
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [indexLabel, viewMore],
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      body,
-                    ],
-                  )
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 48, child: indexLabel),
-                      Expanded(child: body),
-                      const SizedBox(width: AppSpacing.lg),
-                      viewMore,
-                    ],
-                  ),
-          ),
-        ),
-      ),
+      child: row,
     );
   }
 }

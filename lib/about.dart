@@ -57,9 +57,10 @@ class SkillsSection extends StatelessWidget {
     'Dart',
     'C',
     'Swift',
-    'Kotlin',
     'Python',
     'Next.js',
+    'Supabase',
+    'RevenueCat',
   ];
 
   @override
