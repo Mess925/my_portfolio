@@ -6,9 +6,10 @@ import 'experience.dart';
 import 'project.dart';
 import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
+import 'widgets/hover_link.dart';
 import 'widgets/reveal_on_load.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
     required this.toggleTheme,
@@ -19,57 +20,122 @@ class HomePage extends StatelessWidget {
   final ThemeMode themeMode;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _workKey = GlobalKey();
+  final _projectsKey = GlobalKey();
+  final _contactKey = GlobalKey();
+
+  Future<void> _scrollTo(GlobalKey key) async {
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+    await Scrollable.ensureVisible(
+      ctx,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+      alignment: 0,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final isMobile = screenWidth < 600;
-    final horizontalPadding = isMobile ? AppSpacing.lg : AppSpacing.xxl;
-
-    const sectionDelayStep = Duration(milliseconds: 90);
-    final sections = <Widget>[
-      const HeroHeader(),
-      const AboutSection(),
-      const ExperienceSection(),
-      const ProjectsSection(),
-      const SkillsSection(),
-      const ContactSection(),
-    ];
+    final isMobile = screenWidth < 700;
+    final horizontalPadding = isMobile ? AppSpacing.lg : AppSpacing.xl;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(
-                horizontalPadding,
-                isMobile ? AppSpacing.xxxl : 120,
-                horizontalPadding,
-                isMobile ? AppSpacing.xxxl : AppSpacing.section * 2,
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < sections.length; i++) ...[
-                        if (i > 0) const SizedBox(height: AppSpacing.section),
-                        RevealOnLoad(
-                          delay: sectionDelayStep * i,
-                          child: sections[i],
-                        ),
-                      ],
-                    ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1080),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _NavBar(
+                    themeMode: widget.themeMode,
+                    onToggleTheme: widget.toggleTheme,
+                    onWorkTap: () => _scrollTo(_workKey),
+                    onProjectsTap: () => _scrollTo(_projectsKey),
+                    onContactTap: () => _scrollTo(_contactKey),
                   ),
-                ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  const RevealOnLoad(child: HeroHeader()),
+                  SizedBox(height: isMobile ? AppSpacing.section : 96),
+                  Container(key: _workKey, child: const ExperienceSection()),
+                  const SizedBox(height: AppSpacing.section),
+                  Container(
+                    key: _projectsKey,
+                    child: const ProjectsSection(),
+                  ),
+                  const SizedBox(height: AppSpacing.section),
+                  const SkillsSection(),
+                  const SizedBox(height: AppSpacing.section),
+                  Container(key: _contactKey, child: const ContactSection()),
+                  const SizedBox(height: AppSpacing.section),
+                ],
               ),
             ),
           ),
-          Positioned(
-            top: 20,
-            right: horizontalPadding,
-            child: SafeArea(
-              child: _ThemeToggle(themeMode: themeMode, onTap: toggleTheme),
-            ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavBar extends StatelessWidget {
+  const _NavBar({
+    required this.themeMode,
+    required this.onToggleTheme,
+    required this.onWorkTap,
+    required this.onProjectsTap,
+    required this.onContactTap,
+  });
+
+  final ThemeMode themeMode;
+  final VoidCallback onToggleTheme;
+  final VoidCallback onWorkTap;
+  final VoidCallback onProjectsTap;
+  final VoidCallback onContactTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('H THANT', style: textTheme.labelLarge),
+          Row(
+            children: [
+              HoverLink(
+                text: 'Work',
+                underlineAtRest: false,
+                style: textTheme.labelLarge,
+                onTap: onWorkTap,
+              ),
+              const SizedBox(width: AppSpacing.lg),
+              HoverLink(
+                text: 'Projects',
+                underlineAtRest: false,
+                style: textTheme.labelLarge,
+                onTap: onProjectsTap,
+              ),
+              const SizedBox(width: AppSpacing.lg),
+              HoverLink(
+                text: 'Contact',
+                underlineAtRest: false,
+                style: textTheme.labelLarge,
+                onTap: onContactTap,
+              ),
+              const SizedBox(width: AppSpacing.lg),
+              _ThemeToggle(themeMode: themeMode, onTap: onToggleTheme),
+            ],
           ),
         ],
       ),
@@ -101,13 +167,17 @@ class _ThemeToggleState extends State<_ThemeToggle> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: palette.ink),
+          ),
           child: Icon(
             isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-            key: ValueKey(isDark),
-            size: 20,
-            color: _hovered ? palette.accent : palette.inkFaint,
+            size: 15,
+            color: _hovered ? palette.accent : palette.ink,
           ),
         ),
       ),

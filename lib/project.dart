@@ -3,7 +3,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
-import 'widgets/eyebrow_label.dart';
+import 'widgets/hover_link.dart';
+import 'widgets/section_header.dart';
+
+Future<void> _openUrl(String url) async {
+  final Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    throw 'Could not launch $url';
+  }
+}
 
 class ProjectItem {
   const ProjectItem({
@@ -76,23 +84,47 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const EyebrowLabel('Projects'),
+        const SectionHeader(number: '02', title: 'Projects'),
+        const SizedBox(height: AppSpacing.xl),
+        Container(
+          decoration: BoxDecoration(border: Border.all(color: palette.border)),
+          child: Column(
+            children: [
+              for (int i = 0; i < _projects.length; i++)
+                _ProjectRow(
+                  index: i + 1,
+                  project: _projects[i],
+                  isLast: i == _projects.length - 1,
+                ),
+            ],
+          ),
+        ),
         const SizedBox(height: AppSpacing.lg),
-        for (int i = 0; i < _projects.length; i++) ...[
-          if (i > 0) const SizedBox(height: AppSpacing.md + 8),
-          _ProjectRow(project: _projects[i]),
-        ],
+        HoverLink(
+          text: 'See more on GitHub →',
+          style: Theme.of(context).textTheme.labelMedium,
+          onTap: () => _openUrl('https://github.com/Mess925'),
+        ),
       ],
     );
   }
 }
 
 class _ProjectRow extends StatefulWidget {
-  const _ProjectRow({required this.project});
+  const _ProjectRow({
+    required this.index,
+    required this.project,
+    required this.isLast,
+  });
+
+  final int index;
   final ProjectItem project;
+  final bool isLast;
 
   @override
   State<_ProjectRow> createState() => _ProjectRowState();
@@ -113,74 +145,85 @@ class _ProjectRowState extends State<_ProjectRow> {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final palette = theme.extension<AppPalette>()!;
-    final isDark = theme.brightness == Brightness.dark;
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
 
-    final restingBg = isDark ? palette.surface : palette.background;
-    final hoveredBg = isDark
-        ? Color.alphaBlend(palette.accent.withOpacity(0.06), palette.surface)
-        : Color.alphaBlend(
-            palette.accent.withOpacity(0.03),
-            palette.background,
-          );
+    final indexLabel = Text(
+      widget.index.toString().padLeft(2, '0'),
+      style: textTheme.labelMedium,
+    );
+
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.project.title,
+          style: textTheme.titleLarge?.copyWith(fontSize: 24),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(widget.project.description, style: textTheme.bodySmall),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: widget.project.tags
+              .map(
+                (tag) => Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: palette.border),
+                  ),
+                  child: Text(
+                    tag.toUpperCase(),
+                    style: textTheme.labelSmall,
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+
+    final viewMore = Text('View →', style: textTheme.labelLarge);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        transform: Matrix4.translationValues(0, _hovered ? -3 : 0, 0),
+      child: Container(
         decoration: BoxDecoration(
-          color: _hovered ? hoveredBg : restingBg,
-          border: Border.all(
-            color: _hovered ? palette.accent : palette.border,
-          ),
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: isDark
+          color: _hovered ? palette.hoverTint : Colors.transparent,
+          border: widget.isLast
               ? null
-              : [
-                  BoxShadow(
-                    color: _hovered
-                        ? palette.accent.withOpacity(0.14)
-                        : palette.shadow,
-                    blurRadius: _hovered ? 20 : 8,
-                    offset: Offset(0, _hovered ? 8 : 2),
-                  ),
-                ],
+              : Border(bottom: BorderSide(color: palette.border)),
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: _open,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+        child: InkWell(
+          onTap: _open,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: isMobile
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          widget.project.title,
-                          style: textTheme.titleMedium,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [indexLabel, viewMore],
                       ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        widget.project.tags.join(' / '),
-                        style: textTheme.labelSmall,
-                        textAlign: TextAlign.right,
-                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      body,
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 48, child: indexLabel),
+                      Expanded(child: body),
+                      const SizedBox(width: AppSpacing.lg),
+                      viewMore,
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(widget.project.description, style: textTheme.bodySmall),
-                ],
-              ),
-            ),
           ),
         ),
       ),

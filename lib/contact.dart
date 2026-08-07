@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
-import 'widgets/eyebrow_label.dart';
+import 'widgets/hover_link.dart';
 
 Future<void> _openUrl(String url) async {
   final Uri uri = Uri.parse(url);
@@ -17,36 +18,44 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final palette = theme.extension<AppPalette>()!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const EyebrowLabel('Contact'),
-        const SizedBox(height: AppSpacing.lg),
-        _TextLink(
+        Text(
+          "Let's talk.",
+          style: theme.textTheme.displayLarge?.copyWith(fontSize: 56),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        HoverLink(
           text: 'hanminthant222@gmail.com',
-          style: textTheme.bodyMedium,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontSize: 22,
+            color: palette.ink,
+          ),
           onTap: () => _openUrl('mailto:hanminthant222@gmail.com'),
         ),
-        const SizedBox(height: AppSpacing.md),
-        Wrap(
-          spacing: AppSpacing.md,
-          runSpacing: AppSpacing.xs,
+        const SizedBox(height: AppSpacing.xxl),
+        Row(
           children: [
-            _TextLink(
-              text: 'GitHub',
-              style: textTheme.bodySmall,
+            _SocialButton(
+              icon: FontAwesomeIcons.github,
+              tooltip: 'GitHub',
               onTap: () => _openUrl('https://github.com/Mess925'),
             ),
-            _TextLink(
-              text: 'LinkedIn',
-              style: textTheme.bodySmall,
-              onTap: () => _openUrl('https://www.linkedin.com/in/hanminthant/'),
+            const SizedBox(width: AppSpacing.md),
+            _SocialButton(
+              icon: FontAwesomeIcons.linkedin,
+              tooltip: 'LinkedIn',
+              onTap: () =>
+                  _openUrl('https://www.linkedin.com/in/hanminthant/'),
             ),
-            _TextLink(
-              text: 'WhatsApp',
-              style: textTheme.bodySmall,
+            const SizedBox(width: AppSpacing.md),
+            _SocialButton(
+              icon: FontAwesomeIcons.whatsapp,
+              tooltip: 'WhatsApp',
               onTap: () =>
                   _openUrl('https://wa.me/6588247721?text=Hello%20Han!'),
             ),
@@ -57,39 +66,51 @@ class ContactSection extends StatelessWidget {
   }
 }
 
-class _TextLink extends StatefulWidget {
-  const _TextLink({required this.text, required this.style, required this.onTap});
+class _SocialButton extends StatefulWidget {
+  const _SocialButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
 
-  final String text;
-  final TextStyle? style;
+  final IconData icon;
+  final String tooltip;
   final VoidCallback onTap;
 
   @override
-  State<_TextLink> createState() => _TextLinkState();
+  State<_SocialButton> createState() => _SocialButtonState();
 }
 
-class _TextLinkState extends State<_TextLink> {
+class _SocialButtonState extends State<_SocialButton> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOut,
-          style: (widget.style ?? const TextStyle()).copyWith(
-            color: _hovered ? palette.accentHover : palette.accent,
-            decoration: _hovered ? TextDecoration.underline : TextDecoration.none,
-            decorationColor: palette.accentHover,
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _hovered ? palette.ink : Colors.transparent,
+              border: Border.all(color: palette.ink),
+            ),
+            child: Icon(
+              widget.icon,
+              size: 18,
+              color: _hovered ? palette.background : palette.ink,
+            ),
           ),
-          child: Text(widget.text),
         ),
       ),
     );

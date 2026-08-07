@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
-import 'widgets/eyebrow_label.dart';
+import 'widgets/section_header.dart';
 
 class HeroHeader extends StatelessWidget {
   const HeroHeader({super.key});
@@ -11,51 +11,39 @@ class HeroHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final isMobile = screenWidth < 600;
+    final isMobile = screenWidth < 700;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const EyebrowLabel('hthant.dev'),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          'Han Min Thant',
-          style: textTheme.displayLarge?.copyWith(
-            fontSize: isMobile ? 40 : 56,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          'Software engineer building cross-platform mobile apps and the '
-          'systems behind them.',
-          style: textTheme.bodyLarge?.copyWith(
-            fontSize: isMobile ? 17 : 19,
-          ),
-        ),
-      ],
+    final headline = Text(
+      'Mobile developer\n& software\nengineer.',
+      style: textTheme.displayLarge?.copyWith(
+        fontSize: isMobile ? 52 : 96,
+      ),
     );
-  }
-}
 
-class AboutSection extends StatelessWidget {
-  const AboutSection({super.key});
+    final subtitle = Text(
+      'I build cross-platform mobile applications and the low-level '
+      'systems behind them — from APDU smartcard protocols and native C '
+      'layers to polished Flutter UIs on Android and iOS.',
+      style: textTheme.bodyLarge,
+    );
 
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          headline,
+          const SizedBox(height: AppSpacing.lg),
+          subtitle,
+        ],
+      );
+    }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const EyebrowLabel('About'),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          'I build cross-platform mobile applications and low-level systems '
-          'software. I enjoy working close to the hardware — from APDU '
-          'smartcard protocols and native C layers to polished Flutter UIs '
-          'on Android and iOS.',
-          style: textTheme.bodyMedium,
-        ),
+        Expanded(flex: 13, child: headline),
+        const SizedBox(width: AppSpacing.xxl),
+        Expanded(flex: 10, child: subtitle),
       ],
     );
   }
@@ -79,38 +67,31 @@ class SkillsSection extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final palette = theme.extension<AppPalette>()!;
-    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const EyebrowLabel('Skills'),
-        const SizedBox(height: AppSpacing.lg),
+        const SectionHeader(number: '03', title: 'Skills'),
+        const SizedBox(height: AppSpacing.xl),
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: _skills
               .map(
                 (skill) => Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: 7,
+                    horizontal: AppSpacing.md,
+                    vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: isDark ? palette.surface : palette.background,
-                    border: Border.all(color: palette.border),
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                    boxShadow: isDark
-                        ? null
-                        : [
-                            BoxShadow(
-                              color: palette.shadow,
-                              blurRadius: 6,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
+                    border: Border.all(color: palette.ink),
                   ),
-                  child: Text(skill, style: textTheme.labelMedium),
+                  child: Text(
+                    skill,
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
               )
               .toList(),

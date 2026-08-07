@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
-import 'widgets/eyebrow_label.dart';
+import 'widgets/section_header.dart';
 
 class ExperienceItem {
   const ExperienceItem({
@@ -23,7 +24,7 @@ class ExperienceSection extends StatelessWidget {
   static const _experience = [
     ExperienceItem(
       period: 'Feb – Jul 2026',
-      role: 'Software Engineer Intern · Middleware',
+      role: 'Software Engineer Intern',
       company: 'Thales DIS · Singapore',
       description:
           'Built a cross-platform Flutter application for Thales smartcard '
@@ -37,17 +38,22 @@ class ExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.sizeOf(context).width < 600;
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const EyebrowLabel('Experience'),
-        const SizedBox(height: AppSpacing.lg),
-        for (int i = 0; i < _experience.length; i++) ...[
-          if (i > 0) const SizedBox(height: AppSpacing.xl),
-          _ExperienceRow(item: _experience[i], isMobile: isMobile),
-        ],
+        const SectionHeader(number: '01', title: 'Experience'),
+        const SizedBox(height: AppSpacing.xl),
+        for (int i = 0; i < _experience.length; i++)
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: palette.border)),
+            ),
+            child: _ExperienceRow(item: _experience[i], isMobile: isMobile),
+          ),
       ],
     );
   }
@@ -68,9 +74,14 @@ class _ExperienceRow extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(item.role, style: textTheme.titleMedium),
-        const SizedBox(height: 2),
-        Text(item.company, style: textTheme.bodySmall),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.end,
+          spacing: AppSpacing.md,
+          children: [
+            Text(item.role, style: textTheme.titleLarge?.copyWith(fontSize: 24)),
+            Text(item.company, style: textTheme.titleSmall),
+          ],
+        ),
         const SizedBox(height: AppSpacing.xs),
         Text(item.description, style: textTheme.bodySmall),
       ],
@@ -86,8 +97,8 @@ class _ExperienceRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 120, child: period),
-        const SizedBox(width: AppSpacing.md),
+        SizedBox(width: 140, child: period),
+        const SizedBox(width: AppSpacing.xl),
         Expanded(child: content),
       ],
     );
