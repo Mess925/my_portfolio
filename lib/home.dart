@@ -224,15 +224,35 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
 
     return AppBar(
+      automaticallyImplyLeading: false,
+      leadingWidth: 88,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 24),
+        child: Center(
+          child: Text(
+            '~/hmt',
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: colorScheme.primary,
+            ),
+          ),
+        ),
+      ),
       title: TabBar(
         controller: _tabController,
         dividerColor: Colors.transparent,
-        indicator: BoxDecoration(
-          color: colorScheme.primary.withOpacity(0.16),
-          borderRadius: BorderRadius.circular(10),
+        indicator: UnderlineTabIndicator(
+          borderSide: BorderSide(width: 2, color: colorScheme.primary),
+          insets: const EdgeInsets.symmetric(horizontal: 20),
         ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        splashBorderRadius: BorderRadius.circular(10),
+        indicatorSize: TabBarIndicatorSize.label,
+        labelColor: colorScheme.primary,
+        unselectedLabelColor: colorScheme.onSurface.withOpacity(0.6),
+        labelStyle: theme.textTheme.labelMedium?.copyWith(fontSize: 13),
+        unselectedLabelStyle: theme.textTheme.labelMedium?.copyWith(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
         overlayColor: WidgetStatePropertyAll(
           colorScheme.primary.withOpacity(0.06),
         ),
@@ -277,8 +297,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               states,
             ) {
               final selected = states.contains(WidgetState.selected);
-              return TextStyle(
-                fontSize: 12,
+              return theme.textTheme.labelMedium!.copyWith(
+                fontSize: 11,
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                 color: selected
                     ? cs.primary

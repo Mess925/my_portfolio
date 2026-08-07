@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'theme/tokens.dart';
+import 'widgets/section_badge.dart';
+import 'widgets/surface_card.dart';
+
 class ProjectPage extends StatelessWidget {
   const ProjectPage({super.key});
 
@@ -65,15 +69,17 @@ class ProjectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final isDark = theme.brightness == Brightness.dark;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 600;
     final horizontalPadding = isMobile
-        ? 24.0
+        ? AppSpacing.lg
         : screenWidth < 1000
-        ? 32.0
-        : 56.0;
+        ? AppSpacing.xl
+        : AppSpacing.xxxl;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -87,46 +93,23 @@ class ProjectPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Header ───────────────────────────────────────────────
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: cs.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'SELECTED WORK',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.8,
-                    color: cs.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
+              const SectionBadge('SELECTED WORK'),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 'Things I have built.',
-                style: TextStyle(
+                style: textTheme.headlineLarge?.copyWith(
                   fontSize: isMobile ? 36 : 48,
-                  fontWeight: FontWeight.w800,
-                  height: 1.1,
-                  letterSpacing: -1.5,
-                  color: cs.onSurface,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'A collection of projects across systems programming,\ngraphics, and app development.',
-                style: TextStyle(
+                style: textTheme.bodyMedium?.copyWith(
                   fontSize: 15,
-                  height: 1.6,
                   color: cs.onSurface.withOpacity(isDark ? 0.5 : 0.6),
                 ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: AppSpacing.xxl),
 
               // ── Grid ─────────────────────────────────────────────────
               LayoutBuilder(
@@ -147,14 +130,14 @@ class ProjectPage extends StatelessWidget {
                         .map(
                           (p) => SizedBox(
                             width: cardWidth,
-                            child: ProjectCard(project: p, isDark: isDark),
+                            child: ProjectCard(project: p),
                           ),
                         )
                         .toList(),
                   );
                 },
               ),
-              const SizedBox(height: 56),
+              const SizedBox(height: AppSpacing.xxxl),
 
               // ── CTA ──────────────────────────────────────────────────
               Center(
@@ -208,7 +191,7 @@ class _GithubButtonState extends State<_GithubButton> {
                 : widget.isDark
                 ? widget.cs.primary.withOpacity(0.1)
                 : widget.cs.primary.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: _hovered
                   ? widget.cs.primary
@@ -247,9 +230,8 @@ class _GithubButtonState extends State<_GithubButton> {
               const SizedBox(width: 10),
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 180),
-                style: TextStyle(
+                style: Theme.of(context).textTheme.labelMedium!.copyWith(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
                   color: _hovered ? widget.cs.onPrimary : widget.cs.primary,
                 ),
                 child: const Text('View Full GitHub Profile'),
@@ -290,195 +272,109 @@ class ProjectItem {
 
 // ─── Project Card ─────────────────────────────────────────────────────────
 
-class ProjectCard extends StatefulWidget {
-  const ProjectCard({super.key, required this.project, required this.isDark});
+class ProjectCard extends StatelessWidget {
+  const ProjectCard({super.key, required this.project});
   final ProjectItem project;
-  final bool isDark;
-
-  @override
-  State<ProjectCard> createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends State<ProjectCard> {
-  bool _hovered = false;
 
   Future<void> _open() async {
-    final Uri uri = Uri.parse(widget.project.githubUrl);
+    final Uri uri = Uri.parse(project.githubUrl);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch ${widget.project.githubUrl}';
+      throw 'Could not launch ${project.githubUrl}';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    return SurfaceCard(
+      onTap: _open,
+      padding: const EdgeInsets.all(20),
+      builder: (context, hovered) {
+        final theme = Theme.of(context);
+        final cs = theme.colorScheme;
+        final textTheme = theme.textTheme;
+        final isDark = theme.brightness == Brightness.dark;
 
-    final idleBg = widget.isDark
-        ? cs.surfaceContainerHighest.withOpacity(0.5)
-        : cs.surfaceContainerLowest;
-
-    final idleBorder = widget.isDark
-        ? cs.outlineVariant.withOpacity(0.4)
-        : cs.outlineVariant;
-
-    final hoveredBg = cs.primary.withOpacity(widget.isDark ? 0.06 : 0.04);
-    final hoveredBorder = cs.primary.withOpacity(widget.isDark ? 0.5 : 0.55);
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: _open,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          decoration: BoxDecoration(
-            color: _hovered ? hoveredBg : idleBg,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: _hovered ? hoveredBorder : idleBorder,
-              width: 1.5,
-            ),
-            boxShadow: _hovered
-                ? [
-                    BoxShadow(
-                      color: cs.primary.withOpacity(widget.isDark ? 0.1 : 0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    ),
-                  ]
-                : [
-                    if (!widget.isDark)
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                  ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Column(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title + arrow
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Accent top bar
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  height: 3,
-                  color: _hovered
-                      ? cs.primary
-                      : cs.primary.withOpacity(widget.isDark ? 0.25 : 0.2),
+                Expanded(
+                  child: Text(
+                    project.title,
+                    style: textTheme.titleMedium,
+                  ),
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title + arrow
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              widget.project.title,
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: cs.onSurface,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                          ),
-                          AnimatedSlide(
-                            duration: const Duration(milliseconds: 200),
-                            offset: _hovered
-                                ? const Offset(0.1, -0.1)
-                                : Offset.zero,
-                            child: Icon(
-                              Icons.north_east_rounded,
-                              size: 16,
-                              color: _hovered
-                                  ? cs.primary
-                                  : cs.onSurface.withOpacity(
-                                      widget.isDark ? 0.25 : 0.3,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Description
-                      Text(
-                        widget.project.description,
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          height: 1.55,
-                          color: cs.onSurface.withOpacity(
-                            widget.isDark ? 0.55 : 0.65,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Tags
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: widget.project.tags
-                            .map(
-                              (tag) => AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(999),
-                                  color: _hovered
-                                      ? cs.primary.withOpacity(
-                                          widget.isDark ? 0.12 : 0.09,
-                                        )
-                                      : cs.onSurface.withOpacity(
-                                          widget.isDark ? 0.06 : 0.07,
-                                        ),
-                                  border: Border.all(
-                                    color: _hovered
-                                        ? cs.primary.withOpacity(
-                                            widget.isDark ? 0.3 : 0.35,
-                                          )
-                                        : widget.isDark
-                                        ? Colors.transparent
-                                        : cs.outlineVariant.withOpacity(0.6),
-                                  ),
-                                ),
-                                child: Text(
-                                  tag,
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.2,
-                                    color: _hovered
-                                        ? cs.primary
-                                        : cs.onSurface.withOpacity(
-                                            widget.isDark ? 0.55 : 0.6,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                AnimatedSlide(
+                  duration: const Duration(milliseconds: 200),
+                  offset: hovered ? const Offset(0.1, -0.1) : Offset.zero,
+                  child: Icon(
+                    Icons.north_east_rounded,
+                    size: 16,
+                    color: hovered
+                        ? cs.primary
+                        : cs.onSurface.withOpacity(isDark ? 0.25 : 0.3),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
+            const SizedBox(height: AppSpacing.sm),
+
+            // Description
+            Text(
+              project.description,
+              style: textTheme.bodySmall?.copyWith(
+                fontSize: 13.5,
+                height: 1.55,
+                color: cs.onSurface.withOpacity(isDark ? 0.55 : 0.65),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // Tags
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: project.tags
+                  .map(
+                    (tag) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(AppRadius.pill),
+                        color: hovered
+                            ? cs.primary.withOpacity(isDark ? 0.12 : 0.09)
+                            : cs.onSurface.withOpacity(isDark ? 0.06 : 0.07),
+                        border: Border.all(
+                          color: hovered
+                              ? cs.primary.withOpacity(isDark ? 0.3 : 0.35)
+                              : isDark
+                              ? Colors.transparent
+                              : cs.outlineVariant.withOpacity(0.6),
+                        ),
+                      ),
+                      child: Text(
+                        tag,
+                        style: textTheme.labelMedium?.copyWith(
+                          color: hovered
+                              ? cs.primary
+                              : cs.onSurface.withOpacity(
+                                  isDark ? 0.55 : 0.6,
+                                ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
