@@ -100,6 +100,7 @@ class _SocialButtonState extends State<_SocialButton> {
             duration: const Duration(milliseconds: 150),
             width: 48,
             height: 48,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _hovered ? palette.ink : Colors.transparent,
