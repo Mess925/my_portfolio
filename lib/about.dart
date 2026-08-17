@@ -21,9 +21,10 @@ class HeroHeader extends StatelessWidget {
     );
 
     final subtitle = Text(
-      'I build cross-platform mobile applications and the low-level '
-      'systems behind them — from APDU smartcard protocols and native C '
-      'layers to polished Flutter UIs on Android and iOS.',
+      'I build native iOS applications and the low-level systems behind '
+      'them — from APDU smartcard protocols and native C layers to '
+      'polished Swift UIs, with a background in cross-platform Flutter '
+      'development.',
       style: textTheme.bodyLarge,
     );
 

@@ -59,6 +59,12 @@ class ContactSection extends StatelessWidget {
               onTap: () =>
                   _openUrl('https://wa.me/6588247721?text=Hello%20Han!'),
             ),
+            const SizedBox(width: AppSpacing.md),
+            _SocialButton(
+              icon: FontAwesomeIcons.linktree,
+              tooltip: 'Linktree',
+              onTap: () => _openUrl('https://linktr.ee/han_min'),
+            ),
           ],
         ),
       ],
