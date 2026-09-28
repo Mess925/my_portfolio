@@ -20,6 +20,7 @@ class ProjectItem {
     required this.tags,
     this.url,
     this.inProgress = false,
+    this.statusLabel = 'IN PROGRESS',
   });
 
   final String title;
@@ -27,6 +28,7 @@ class ProjectItem {
   final List<String> tags;
   final String? url;
   final bool inProgress;
+  final String statusLabel;
 }
 
 class ProjectsSection extends StatelessWidget {
@@ -40,10 +42,11 @@ class ProjectsSection extends StatelessWidget {
       tags: ['Flutter', 'Dart', 'Android', 'iOS', 'C', 'APDU', 'SDK'],
     ),
     ProjectItem(
-      title: 'Pethub',
+      title: 'Peculiar',
       description:
           'iOS app for pet lovers to organize photos into per-pet rooms, with a Lost & Found board to help reunite missing pets, plus DM and group room chat. Built with Supabase and RevenueCat, released on the App Store.',
       tags: ['iOS', 'Swift', 'Supabase', 'RevenueCat'],
+      url: 'https://apps.apple.com/us/app/peculiar/id6780828165',
     ),
     ProjectItem(
       title: 'Third Eye',
@@ -67,11 +70,12 @@ class ProjectsSection extends StatelessWidget {
       url: 'https://github.com/Mess925/ProtectivePath',
     ),
     ProjectItem(
-      title: 'NovalBox',
+      title: 'NovelBox',
       description:
-          'A Letterboxd-style social app for tracking, rating, and reviewing the books you read.',
+          'A Letterboxd-style social app for tracking, rating, and reviewing the books you read. Releasing on the App Store in October 2026.',
       tags: ['iOS', 'Swift'],
       inProgress: true,
+      statusLabel: 'RELEASING OCT 2026',
     ),
   ];
 
@@ -161,7 +165,7 @@ class _ProjectRowState extends State<_ProjectRow> {
                   border: Border.all(color: palette.accent),
                 ),
                 child: Text(
-                  'IN PROGRESS',
+                  widget.project.statusLabel,
                   style: textTheme.labelSmall?.copyWith(color: palette.accent),
                 ),
               ),

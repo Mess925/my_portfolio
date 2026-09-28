@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'espresso.dart';
 import 'theme/app_theme.dart';
 import 'theme/tokens.dart';
 import 'widgets/hover_link.dart';
@@ -64,6 +65,14 @@ class ContactSection extends StatelessWidget {
               icon: FontAwesomeIcons.linktree,
               tooltip: 'Linktree',
               onTap: () => _openUrl('https://linktr.ee/han_min'),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            _SocialButton(
+              icon: FontAwesomeIcons.mugSaucer,
+              tooltip: 'Buy me an espresso',
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const EspressoPage()),
+              ),
             ),
           ],
         ),
