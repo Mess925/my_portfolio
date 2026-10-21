@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'evaluation.dart';
 import 'home.dart';
 import 'theme/app_theme.dart';
 
@@ -32,6 +33,9 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       home: HomePage(toggleTheme: toggleTheme, themeMode: _themeMode),
+      routes: {
+        EvaluationPage.routeName: (_) => const EvaluationPage(),
+      },
     );
   }
 }

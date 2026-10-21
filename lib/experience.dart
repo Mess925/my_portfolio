@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'theme/app_theme.dart';
+import 'evaluation.dart';
 import 'theme/tokens.dart';
+import 'widgets/hover_link.dart';
 import 'widgets/section_header.dart';
 
 class ExperienceItem {
@@ -10,12 +12,16 @@ class ExperienceItem {
     required this.role,
     required this.company,
     required this.description,
+    this.linkText,
+    this.routeName,
   });
 
   final String period;
   final String role;
   final String company;
   final String description;
+  final String? linkText;
+  final String? routeName;
 }
 
 class ExperienceSection extends StatelessWidget {
@@ -33,6 +39,8 @@ class ExperienceSection extends StatelessWidget {
           'encryption, and biometric verification, all via APDU commands. '
           'Also implemented the native layers in C and built a reusable SDK '
           'for the next developer to pick up.',
+      linkText: 'Watch my final internship evaluation →',
+      routeName: EvaluationPage.routeName,
     ),
   ];
 
@@ -84,6 +92,14 @@ class _ExperienceRow extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(item.description, style: textTheme.bodySmall),
+        if (item.linkText != null && item.routeName != null) ...[
+          const SizedBox(height: AppSpacing.sm),
+          HoverLink(
+            text: item.linkText!,
+            style: textTheme.labelLarge,
+            onTap: () => Navigator.of(context).pushNamed(item.routeName!),
+          ),
+        ],
       ],
     );
 
