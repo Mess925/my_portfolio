@@ -4,11 +4,10 @@ import 'theme/tokens.dart';
 import 'widgets/hover_link.dart';
 import 'widgets/video_embed.dart';
 
-/// Where the evaluation video is hosted. The file is too large to ship with
-/// the site, so paste a YouTube (unlisted works), Vimeo, Google Drive share
-/// link, or a direct .mp4 URL here.
-const String _videoUrl =
-    'https://drive.google.com/file/d/1qKGPdX1xB_Fogjxdclvl9DfS3PqWFb64/view?usp=share_link';
+/// Served from `web/videos/` (compressed to stay under GitHub's 100 MB file
+/// limit). The query string keeps Flutter's service worker from trying to
+/// cache the whole file, so the browser streams and seeks it natively.
+const String _videoUrl = 'videos/evaluation.mp4?stream=1';
 
 /// Standalone page for the Thales internship evaluation video — reached from
 /// the Experience section, and directly at `/#/evaluation`.
