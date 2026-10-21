@@ -7,7 +7,8 @@ import 'widgets/video_embed.dart';
 /// Where the evaluation video is hosted. The file is too large to ship with
 /// the site, so paste a YouTube (unlisted works), Vimeo, Google Drive share
 /// link, or a direct .mp4 URL here.
-const String _videoUrl = 'VIDEO_URL_HERE';
+const String _videoUrl =
+    'https://drive.google.com/file/d/1qKGPdX1xB_Fogjxdclvl9DfS3PqWFb64/view?usp=share_link';
 
 /// Standalone page for the Thales internship evaluation video — reached from
 /// the Experience section, and directly at `/#/evaluation`.
